@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Add Bubble" />
 
-    <com.garlicg.tiii.bubble.BubbleLayout
+    <com.garlicg.tiii.bubble.MagnetLayout
         android:id="@+id/bubbleLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,24 +27,25 @@
         </FrameLayout>
 
         <ImageView
-            android:id="@+id/trashCircle"
+            android:id="@+id/trash"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="16dp"
             android:background="@drawable/circle_button_dark"
             android:scaleType="center"
+            android:tint="#fff"
             android:src="@drawable/ic_menu_delete" />
 
         <FrameLayout
-            android:id="@+id/bubble"
+            android:id="@+id/magnetCircle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/circle_button_white"
             android:padding="3dp">
 
             <ImageView
-                android:id="@+id/bubbleImage"
+                android:id="@+id/magnetImage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@drawable/circle_inner_frame"
@@ -53,7 +54,7 @@
         </FrameLayout>
 
 
-    </com.garlicg.tiii.bubble.BubbleLayout>
+    </com.garlicg.tiii.bubble.MagnetLayout>
 
 
 </LinearLayout>
