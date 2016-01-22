@@ -26,37 +26,30 @@
 
         </FrameLayout>
 
-        <View
-            android:id="@+id/trashCircle"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="16dp"
-            android:background="#000" />
-
         <ImageView
-            android:id="@+id/trashImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:id="@+id/trashCircle"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="16dp"
-            android:padding="12dp"
-            android:src="@android:drawable/ic_delete"
-            android:tint="#fff" />
+            android:background="@drawable/circle_button_dark"
+            android:scaleType="center"
+            android:src="@drawable/ic_menu_delete" />
 
         <FrameLayout
             android:id="@+id/bubble"
-            android:layout_width="60dp"
-            android:layout_height="60dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_button_white"
+            android:padding="3dp">
 
             <ImageView
-                android:alpha="0.8"
                 android:id="@+id/bubbleImage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/button_outer"
-                android:duplicateParentState="true"
-                android:src="@drawable/button_inner" />
+                android:background="@drawable/circle_inner_frame"
+                android:src="@drawable/circle_inner_circle"
+                android:duplicateParentState="true" />
         </FrameLayout>
 
 
