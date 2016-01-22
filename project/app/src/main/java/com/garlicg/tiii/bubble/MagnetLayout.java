@@ -1,5 +1,7 @@
 package com.garlicg.tiii.bubble;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -47,8 +49,6 @@ public class MagnetLayout extends FrameLayout {
     View mMagnetCircleView;
     @Nullable
     View mTrashView;
-    @Nullable
-    private OnClickListener mClickListener;
 
     @Override
     protected void onFinishInflate() {
@@ -58,6 +58,12 @@ public class MagnetLayout extends FrameLayout {
         mTrashView = ViewFinder.byId(this, R.id.trash);
         hideTrashToBottom(true);
     }
+
+    ////////////////////////
+    // Magnet Click Listener
+
+    @Nullable
+    private OnClickListener mClickListener;
 
     public interface OnMagnetClickListener {
         /**
@@ -78,6 +84,25 @@ public class MagnetLayout extends FrameLayout {
             mMagnetCircleView.setOnClickListener(mClickListener);
         }
     }
+
+
+    ////////////////////////
+    // Lifecycle Listener
+
+    @Nullable
+    private OnMagnetEventListener mEventListener;
+
+    public interface OnMagnetEventListener{
+        void onMagnetQuit();
+    }
+
+    public void setOnMagnetEventListener(OnMagnetEventListener listener){
+        mEventListener = listener;
+    }
+
+
+    //////////////////
+    // 処理
 
     VelocityTracker mVelocityTracker = null;
     private int mSlop;
@@ -147,10 +172,12 @@ public class MagnetLayout extends FrameLayout {
             final long animTime = 200;
             mVelocityTracker.computeCurrentVelocity(50, mMaxVelocity);
 
+            // おしまい
             if (mTrashEnable && hitTrashCircle(x, y)) {
                 mQuiting = true;
                 dismissHitTrash();
             }
+            // 継続
             else {
                 // BubbleのX位置をこのViewの右端か左端に調整する
                 final int width = target.getWidth();
@@ -227,20 +254,31 @@ public class MagnetLayout extends FrameLayout {
     }
 
     void dismissHitTrash() {
-        if (mTrashView != null) {
-            mTrashView.animate()
-                    .scaleY(0f)
-                    .scaleX(0f)
-                    .setInterpolator(new AnticipateInterpolator())
-                    .start();
+        if (mMagnetCircleView == null || mTrashView == null) {
+            throw new IllegalStateException("View is null.");
         }
-        if (mMagnetCircleView != null) {
-            mMagnetCircleView.animate()
-                    .scaleX(0f)
-                    .scaleY(0f)
-                    .setInterpolator(new AccelerateInterpolator())
-                    .start();
-        }
+        mTrashView.animate()
+                .scaleY(0f)
+                .scaleX(0f)
+                .setInterpolator(new AnticipateInterpolator())
+                .setDuration(200)
+                .start();
+        mMagnetCircleView.animate()
+                .scaleX(0f)
+                .scaleY(0f)
+                .setInterpolator(new AccelerateInterpolator())
+                .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        if(mEventListener != null){
+                            mEventListener.onMagnetQuit();
+                        }
+                    }
+                })
+                .start();
+
     }
 
     public void setTrashEnable(boolean enable){

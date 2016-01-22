@@ -38,7 +38,7 @@ public class BubbleSampleActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.bubble_sample);
-        final MagnetLayout bl = ViewFinder.byId(this , R.id.bubbleLayout);
+        final MagnetLayout bl = ViewFinder.byId(this , R.id.magnetLayout);
 
 
         bl.setOnBubbleClickListener(new MagnetLayout.OnMagnetClickListener() {

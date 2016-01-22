@@ -5,17 +5,27 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+
+import com.garlicg.tiii.bubble.MagnetLayout;
+import com.garlicg.tiii.util.ViewFinder;
+
+import timber.log.Timber;
 
 /**
  */
-public class FloatingService extends Service {
+public class FloatingService extends Service implements MagnetLayout.OnMagnetEventListener{
 
+    private WindowManager mWindowManager;
+    private View mRoot;
 
     @Nullable
     @Override
@@ -27,46 +37,40 @@ public class FloatingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        // none
+        final LayoutInflater inflater = LayoutInflater.from(this);
+        mRoot = inflater.inflate(R.layout.bubble_sample, null, false);
+        MagnetLayout magnetLayout = ViewFinder.byId(mRoot ,R.id.magnetLayout);
+        magnetLayout.setOnMagnetEventListener(this);
+        mWindowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
+        mWindowManager.addView(mRoot, createLayoutParams());
+    }
+
+    private static WindowManager.LayoutParams createLayoutParams() {
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                , PixelFormat.TRANSLUCENT);
+        return params;
+
     }
 
     @SuppressLint("InflateParams")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        if (mFloatingViewManager != null) {
-//            return START_STICKY;
-//        }
-
-        final LayoutInflater inflater = LayoutInflater.from(this);
-        final ImageView iconView = (ImageView) inflater.inflate(R.layout.widget_chathead, null, false);
-        iconView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-
-
-//        mFloatingViewManager = new FloatingViewManager(this, mFloatingViewListener);
-//        mFloatingViewManager.setFixedTrashIconImage(android.R.drawable.ic_menu_delete);
-//        mFloatingViewManager.setActionTrashIconImage(android.R.drawable.ic_menu_rotate);
-//        final FloatingViewManager.Options options = new FloatingViewManager.Options();
-//        options.shape = FloatingViewManager.SHAPE_CIRCLE;
-//        options.overMargin = DisplayUtils.dpToPx(getResources(), 16);
-//        mFloatingViewManager.setDisplayMode(FloatingViewManager.DISPLAY_MODE_SHOW_ALWAYS);
-//        mFloatingViewManager.addViewToWindow(iconView, options);
-
-
-        Log.i("TAG", "launch!");
-        startForeground(2525, createNotification());
-
-//        return START_STICKY;
+        Timber.i("onStartCommand %s" ,intent);
         return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        mFloatingViewManager.removeAllViewToWindow();
+        if(mRoot != null){
+            mWindowManager.removeView(mRoot);
+            mRoot = null;
+        }
     }
 
 
@@ -90,5 +94,10 @@ public class FloatingService extends Service {
         return null;
     }
 
+
+    @Override
+    public void onMagnetQuit() {
+        stopSelf();
+    }
 
 }

@@ -2,20 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/addBubble"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Bubble" />
 
     <com.garlicg.tiii.bubble.MagnetLayout
-        android:id="@+id/bubbleLayout"
+        android:id="@+id/magnetLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ccc">
+        android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/trashLayout"
@@ -34,8 +27,8 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/circle_button_dark"
             android:scaleType="center"
-            android:tint="#fff"
-            android:src="@drawable/ic_menu_delete" />
+            android:src="@drawable/ic_menu_delete"
+            android:tint="#fff" />
 
         <FrameLayout
             android:id="@+id/magnetCircle"
@@ -49,8 +42,8 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@drawable/circle_inner_frame"
-                android:src="@drawable/circle_inner_circle"
-                android:duplicateParentState="true" />
+                android:duplicateParentState="true"
+                android:src="@drawable/circle_inner_circle" />
         </FrameLayout>
 
 

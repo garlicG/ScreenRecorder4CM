@@ -2,6 +2,7 @@ package com.garlicg.tiii;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -38,8 +39,8 @@ public class LauncherActivity extends Activity {
         startChatHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext() , BubbleSampleActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(v.getContext() , FloatingService.class);
+                startService(intent);
             }
         });
 
@@ -47,7 +48,8 @@ public class LauncherActivity extends Activity {
         stopChatHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                Intent intent = new Intent(v.getContext() , BubbleSampleActivity.class);
+                startActivity(intent);
             }
         });
     }
