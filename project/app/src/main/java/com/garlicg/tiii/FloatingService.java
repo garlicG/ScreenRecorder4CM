@@ -8,14 +8,16 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
-import com.garlicg.tiii.bubble.MagnetLayout;
+import com.garlicg.tiii.magnet.DecorDummyView;
+import com.garlicg.tiii.magnet.MagnetLayout;
+import com.garlicg.tiii.magnet.MagnetView;
+import com.garlicg.tiii.util.ExtDebugTree;
 import com.garlicg.tiii.util.ViewFinder;
 
 import timber.log.Timber;
@@ -25,7 +27,8 @@ import timber.log.Timber;
 public class FloatingService extends Service implements MagnetLayout.OnMagnetEventListener{
 
     private WindowManager mWindowManager;
-    private View mRoot;
+    private MagnetView mMagnetView;
+    private DecorDummyView mDecorDummy;
 
     @Nullable
     @Override
@@ -38,24 +41,13 @@ public class FloatingService extends Service implements MagnetLayout.OnMagnetEve
     public void onCreate() {
         super.onCreate();
         final LayoutInflater inflater = LayoutInflater.from(this);
-        mRoot = inflater.inflate(R.layout.bubble_sample, null, false);
-        MagnetLayout magnetLayout = ViewFinder.byId(mRoot ,R.id.magnetLayout);
-        magnetLayout.setOnMagnetEventListener(this);
-        mWindowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
-        mWindowManager.addView(mRoot, createLayoutParams());
+        mDecorDummy = new DecorDummyView(this);
+        mDecorDummy.attachToWindow();
+
+        mMagnetView = (MagnetView) inflater.inflate(R.layout.widget_magnet, null, false);
+        mMagnetView.attachToWindow(mDecorDummy);
     }
 
-    private static WindowManager.LayoutParams createLayoutParams() {
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                , PixelFormat.TRANSLUCENT);
-        return params;
-
-    }
 
     @SuppressLint("InflateParams")
     @Override
@@ -67,9 +59,9 @@ public class FloatingService extends Service implements MagnetLayout.OnMagnetEve
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mRoot != null){
-            mWindowManager.removeView(mRoot);
-            mRoot = null;
+        if(mMagnetView != null){
+            mWindowManager.removeView(mMagnetView);
+            mMagnetView = null;
         }
     }
 

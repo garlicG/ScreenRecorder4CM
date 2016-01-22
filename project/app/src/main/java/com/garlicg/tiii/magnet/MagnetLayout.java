@@ -1,4 +1,4 @@
-package com.garlicg.tiii.bubble;
+package com.garlicg.tiii.magnet;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -272,7 +272,7 @@ public class MagnetLayout extends FrameLayout {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        if(mEventListener != null){
+                        if (mEventListener != null) {
                             mEventListener.onMagnetQuit();
                         }
                     }

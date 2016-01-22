@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.garlicg.tiii.magnet.MagnetView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/magnetFrame"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/circle_button_white"
+    android:padding="3dp">
+
+    <ImageView
+        android:id="@+id/magnetImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/circle_inner_frame"
+        android:duplicateParentState="true"
+        android:src="@drawable/circle_inner_circle" />
+</com.garlicg.tiii.magnet.MagnetView>
