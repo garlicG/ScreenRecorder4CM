@@ -21,8 +21,11 @@ import com.garlicg.tiii.R;
 import com.garlicg.tiii.util.DisplayUtils;
 import com.garlicg.tiii.util.ViewFinder;
 
+
 /**
+ * 上位レイヤーだとボタン以外のタッチは拾えないので使えない子
  */
+@Deprecated
 public class MagnetLayout extends FrameLayout {
 
     private boolean mTrashEnable = true;

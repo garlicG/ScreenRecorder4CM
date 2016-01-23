@@ -26,6 +26,7 @@ public class LauncherActivity extends Activity {
     private static final int CHATHEAD_OVERLAY_PERMISSION_REQUEST_CODE = 100;
 
 
+    boolean mToggle = true;
     /**
      * onCreate
      */
@@ -40,7 +41,14 @@ public class LauncherActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext() , FloatingService.class);
-                startService(intent);
+                if(mToggle){
+                    startService(intent);
+                }
+                else{
+                    stopService(intent);
+                }
+                mToggle = !mToggle;
+
             }
         });
 
