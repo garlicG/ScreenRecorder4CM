@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.garlicg.tiii.magnet.MagnetView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.garlicg.tiii.magnet.MagnetWindow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -21,4 +21,4 @@
     </FrameLayout>
 
 
-</com.garlicg.tiii.magnet.MagnetView>
+</com.garlicg.tiii.magnet.MagnetWindow>

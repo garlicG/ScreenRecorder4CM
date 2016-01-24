@@ -13,7 +13,7 @@ public class FloatingManager {
 
     private final Context mContext;
     private final WindowManager mWindowManager;
-    private MagnetView mMagnetView;
+    private MagnetWindow mMagnetView;
     private DecorDummy mDecorDummy;
 
 
@@ -30,8 +30,8 @@ public class FloatingManager {
         mDecorDummy = new DecorDummy(mContext);
         mWindowManager.addView(mDecorDummy, DecorDummy.createWindowParams());
 
-        mMagnetView = (MagnetView) inflater.inflate(R.layout.widget_magnet, null, false);
-        mWindowManager.addView(mMagnetView, MagnetView.createWindowParams());
+        mMagnetView = (MagnetWindow) inflater.inflate(R.layout.widget_magnet_window, null, false);
+        mWindowManager.addView(mMagnetView, MagnetWindow.createWindowParams());
         mMagnetView.setDecorDummy(mDecorDummy);
     }
 

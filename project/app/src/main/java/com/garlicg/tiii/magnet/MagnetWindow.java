@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -30,7 +30,7 @@ import timber.log.Timber;
 
 /**
  */
-public class MagnetView extends FrameLayout{
+public class MagnetWindow extends FrameLayout{
 
     private static final String KEY_X = "x";
     private static final String KEY_Y = "y";
@@ -63,13 +63,13 @@ public class MagnetView extends FrameLayout{
     }
 
 
-    public MagnetView(Context context, AttributeSet attrs) {
+    public MagnetWindow(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
 
-    public MagnetView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MagnetWindow(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -115,7 +115,7 @@ public class MagnetView extends FrameLayout{
     // View位置の補完
 
     private final Point mDisplaySizeCache = new Point();
-    private final Point mWindowSizeCache = new Point();
+    private final Point mDecorSizeCache = new Point();
     private final PointF mTouchPointCache = new PointF();
 
     private void updateWindowSize(){
@@ -123,21 +123,21 @@ public class MagnetView extends FrameLayout{
 //        Timber.i("dl:" + mDecorDummy.getHeight());
         mWindowManager.getDefaultDisplay().getSize(mDisplaySizeCache);
 
-        mWindowSizeCache.x = mDecorDummy.getWidth();
-        mWindowSizeCache.y = mDecorDummy.getHeight();
+        mDecorSizeCache.x = mDecorDummy.getWidth();
+        mDecorSizeCache.y = mDecorDummy.getHeight();
 
         mTouchYDiff = mDisplaySizeCache.y - mDecorDummy.getHeight();
         Timber.i("displaySize:" + mDisplaySizeCache.y + " ,decorHeight:" + mDecorDummy.getHeight());
     }
 
 
-    private int getWindowWidth(){
-        return mWindowSizeCache.x;
+    private int getParentWidth(){
+        return mDecorSizeCache.x;
     }
 
 
-    private int getWindowHeight(){
-        return mWindowSizeCache.y;
+    private int getParentHeight(){
+        return mDecorSizeCache.y;
     }
 
 
@@ -148,7 +148,7 @@ public class MagnetView extends FrameLayout{
         return mTouchPointCache;
     }
 
-    void locateOnWindow(float toX, float toY) {
+    void locate(float toX, float toY) {
         WindowManager.LayoutParams lp = (WindowManager.LayoutParams) getLayoutParams();
         lp.x = (int) toX;
         lp.y = (int) toY;
@@ -156,7 +156,7 @@ public class MagnetView extends FrameLayout{
     }
 
 
-    void animOnWindow(float toX, float toY) {
+    void locateAnimation(float toX, float toY) {
         final WindowManager.LayoutParams lp = (WindowManager.LayoutParams) getLayoutParams();
         final View self = this;
 
@@ -183,7 +183,7 @@ public class MagnetView extends FrameLayout{
     private boolean mMoving = false;
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         final int action = event.getAction();
 
         if (action == MotionEvent.ACTION_DOWN) {
@@ -208,7 +208,7 @@ public class MagnetView extends FrameLayout{
             else{
                  float toX = touchPoint.x - getWidth() /2;
                  float toY = touchPoint.y - getHeight()/2;
-                 locateOnWindow(toX , toY);
+                 locate(toX, toY);
                  event.offsetLocation(toX, toY);
                  mVelocityTracker.addMovement(event);
             }
@@ -231,19 +231,19 @@ public class MagnetView extends FrameLayout{
                 // 継続
                 else {
                     // BubbleのX位置をこのViewの右端か左端に調整する
-                    float toX = touchPoint.x + mVelocityTracker.getXVelocity() < getWindowWidth() / 2 ?
+                    float toX = touchPoint.x + mVelocityTracker.getXVelocity() < getParentWidth() / 2 ?
                             0 :
-                            getWindowWidth() - getWidth();
+                            getParentWidth() - getWidth();
 
                     // BubbleのY位置をこのViewの範囲内に調整する
                     final int height = getHeight();
                     float toY = (touchPoint.y - height / 2) + mVelocityTracker.getYVelocity();
                     toY = Math.max(0, toY);
-                    toY = Math.min(getWindowHeight() - height, toY);
+                    toY = Math.min(getParentHeight() - height, toY);
                     Timber.i("YVelocity:" + mVelocityTracker.getYVelocity());
 
                     // アニメで動かす
-                    animOnWindow(toX, toY);
+                    locateAnimation(toX, toY);
 
                     // ゴミ箱を隠す
 //                hideTrashToBottom(false);
