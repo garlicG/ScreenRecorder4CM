@@ -37,8 +37,9 @@ public class FloatingManager implements MagnetWindow.Listener {
     private ObjectAnimator mRotate2;
 
     private static final int STATE_CONTROLLABLE = 0;
-    private static final int STATE_RECORDING = 1;
-    private static final int STATE_STOPPING = 2;
+    private static final int STATE_COUNT_DOWN = 1;
+    private static final int STATE_RECORDING = 2;
+    private static final int STATE_STOPPING = 3;
     private int mState = STATE_CONTROLLABLE;
 
 
@@ -88,28 +89,40 @@ public class FloatingManager implements MagnetWindow.Listener {
     }
 
 
+    public void initState(){
+        mState = STATE_CONTROLLABLE;
+        mVibrator.vibrate(800);
+        mMagnet.getView().setEnabled(true);
+        mMagnet.getMagnetImage().setColorFilter(0xffffffff);
+        mRotate2.cancel();
+    }
+
+
+    ////////////////
+    // MagnetViewからのコールバック
+
     @Override
-    public void onClick(View v) {
-        ImageView image = ViewFinder.byId(v, R.id.magnetImage);
+    public void onClick(MagnetWindow window) {
 
         if(mState == STATE_CONTROLLABLE ){
-            mState = STATE_RECORDING;
+            mState = STATE_COUNT_DOWN;
             mVibrator.vibrate(15);
-            mListener.onStartRecord();
-
-            v.setActivated(true);
-            image.setColorFilter(0xffff0000);
-            image.setRotation(image.getRotation() % 360);
-            mRotate1 = genRotateAnimation(image , 2000);
-            mRotate1.start();
+            startCountDown();
+        }
+        else if(mState == STATE_COUNT_DOWN){
+            mState = STATE_CONTROLLABLE;
+            mVibrator.vibrate(15);
+            cancelCountDown();
         }
         else if(mState == STATE_RECORDING){
             mState = STATE_STOPPING;
             mVibrator.vibrate(15);
             mListener.onStopRecord();
 
+            View v = window.getView();
             v.setEnabled(false);
             v.setActivated(false);
+            ImageView image = window.getMagnetImage();
             image.setColorFilter(0xff333333);
             mRotate1.cancel();
             mRotate2 = genRotateAnimation(image , 6000);
@@ -117,25 +130,69 @@ public class FloatingManager implements MagnetWindow.Listener {
         }
     }
 
-    public void initState(){
-        mState = STATE_CONTROLLABLE;
-        mVibrator.vibrate(800);
-        mMagnet.getMagnetCircle().setEnabled(true);
-        mMagnet.getMagnetImage().setColorFilter(0xffffffff);
-        mRotate2.cancel();
+
+    private void startCountDown(){
+        mMagnet.getMagnetText().setText("3");
+        mHandler.postDelayed(mCountDown2, 1000);
+        mHandler.postDelayed(mCountDown1, 2000);
+        mHandler.postDelayed(mCountDown0, 3000);
     }
 
 
-    @Override
-    public void onTouchMoveStart(View v) {
-        if(mState != STATE_CONTROLLABLE) return;
+    private void cancelCountDown(){
+        mMagnet.getMagnetText().setText("");
+        mHandler.removeCallbacks(mCountDown2);
+        mHandler.removeCallbacks(mCountDown1);
+        mHandler.removeCallbacks(mCountDown0);
+    }
 
+
+    private Runnable mCountDown2 = new Runnable() {
+        @Override
+        public void run() {
+            mMagnet.getMagnetText().setText("2");
+        }
+    };
+
+
+    private Runnable mCountDown1 = new Runnable() {
+        @Override
+        public void run() {
+            mMagnet.getMagnetText().setText("1");
+        }
+    };
+
+
+    private Runnable mCountDown0 = new Runnable() {
+        @Override
+        public void run() {
+            mState = STATE_RECORDING;
+            mListener.onStartRecord();
+
+            View v = mMagnet.getView();
+            v.setActivated(true);
+
+            mMagnet.getMagnetText().setText("");
+
+            ImageView image = mMagnet.getMagnetImage();
+            image.setColorFilter(0xffff0000);
+            image.setRotation(image.getRotation() % 360);
+            mRotate1 = genRotateAnimation(image, 2000);
+            mRotate1.start();
+        }
+    };
+
+
+
+    @Override
+    public void onTouchMoveStart(MagnetWindow window) {
+        if(mState != STATE_CONTROLLABLE) return;
         mTrash.show();
     }
 
 
     @Override
-    public void onTouchMoving(View v ,Point decor, PointF touchPoint) {
+    public void onTouchMoving(MagnetWindow window ,Point decor, PointF touchPoint) {
         if(mState != STATE_CONTROLLABLE) return;
 
         boolean isHit = mTrash.isHit(decor, touchPoint);
@@ -144,7 +201,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     @Override
-    public boolean onTouchMoveEnd(View v ,Point decor, PointF touchPoint) {
+    public boolean onTouchMoveEnd(MagnetWindow window ,Point decor, PointF touchPoint) {
         if(mState != STATE_CONTROLLABLE) return false;
 
         if(mTrash.isHit(decor, touchPoint)){
@@ -162,7 +219,6 @@ public class FloatingManager implements MagnetWindow.Listener {
         mTrash.hide();
         return false;
     }
-
 
 
     private ObjectAnimator genRotateAnimation(View v ,long duration){

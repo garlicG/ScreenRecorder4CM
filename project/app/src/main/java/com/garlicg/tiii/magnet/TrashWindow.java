@@ -63,7 +63,6 @@ public class TrashWindow extends FrameLayout{
         mWindowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         final Resources res = context.getResources();
         mWindowSize = DisplayUtils.dpToPx(res , WINDOW_SIZE_DP);
-//        setVisibility(INVISIBLE);
     }
 
 
