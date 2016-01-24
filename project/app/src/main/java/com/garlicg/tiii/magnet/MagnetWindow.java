@@ -22,10 +22,12 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.garlicg.tiii.R;
 import com.garlicg.tiii.util.DisplayUtils;
 import com.garlicg.tiii.util.Interpolators;
+import com.garlicg.tiii.util.ViewFinder;
 
 import timber.log.Timber;
 
@@ -56,6 +58,7 @@ public class MagnetWindow extends FrameLayout{
     private static final String KEY_X = "x";
     private static final String KEY_Y = "y";
     private WindowManager mWindowManager;
+    private View mMagnetFrame;
     private int mTouchYDiff = 0;
     VelocityTracker mVelocityTracker = null;
     private int mMaxVelocity;
@@ -63,6 +66,7 @@ public class MagnetWindow extends FrameLayout{
     private DecorDummy mDecorDummy;
     private float mInitialTouchX;
     private float mInitialTouchY;
+
 
 
     public MagnetWindow(Context context, AttributeSet attrs) {
@@ -83,11 +87,11 @@ public class MagnetWindow extends FrameLayout{
         mMaxVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
     }
 
-
-    public void setDecorDummy(DecorDummy decorDummy){
-        mDecorDummy = decorDummy;
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        mMagnetFrame = ViewFinder.byId(this, R.id.magnetFrame);
     }
-
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -108,9 +112,23 @@ public class MagnetWindow extends FrameLayout{
             AnimationSet set = new AnimationSet(false);
             set.addAnimation(scale);
             set.addAnimation(rotate);
-            findViewById(R.id.magnetFrame).startAnimation(set);
+            mMagnetFrame.startAnimation(set);
         }
     }
+
+
+    public void setDecorDummy(DecorDummy decorDummy){
+        mDecorDummy = decorDummy;
+    }
+
+    public View getMagnetCircle(){
+        return mMagnetFrame;
+    }
+
+    public ImageView getMagnetImage(){
+        return (ImageView) findViewById(R.id.magnetImage);
+    }
+
 
 
     //////////////////
@@ -178,6 +196,7 @@ public class MagnetWindow extends FrameLayout{
         animXY.start();
     }
 
+
     ///////////////
     // 状態管理とか
 
@@ -220,7 +239,7 @@ public class MagnetWindow extends FrameLayout{
                 if ((xDiff + yDiff) / 2 > mSlop) {
                     if (mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
                     else mVelocityTracker.clear();
-                    mListener.onTouchMoveStart(this);
+                    mListener.onTouchMoveStart(mMagnetFrame);
                     mMoving = true;
                 }
             }
@@ -228,7 +247,7 @@ public class MagnetWindow extends FrameLayout{
                  float toX = touchPoint.x - getWidth() /2;
                  float toY = touchPoint.y - getHeight()/2;
                  locate(toX, toY);
-                 mListener.onTouchMoving(this ,mDecorSizeCache , touchPoint);
+                 mListener.onTouchMoving(mMagnetFrame ,mDecorSizeCache , touchPoint);
                  event.offsetLocation(toX, toY);
                  mVelocityTracker.addMovement(event);
             }
@@ -238,13 +257,13 @@ public class MagnetWindow extends FrameLayout{
             final PointF touchPoint = getTouchPoint(event);
 
             if(!mMoving){
-                mListener.onClick(this);
+                mListener.onClick(mMagnetFrame);
             }
             else{
                 mVelocityTracker.computeCurrentVelocity(50, mMaxVelocity);
 
                 // おしまい
-                if(mListener.onTouchMoveEnd(this ,mDecorSizeCache , touchPoint)){
+                if(mListener.onTouchMoveEnd(mMagnetFrame ,mDecorSizeCache , touchPoint)){
                     // none
                 }
                 // 継続
@@ -279,10 +298,10 @@ public class MagnetWindow extends FrameLayout{
     // Listener
 
     public interface Listener{
-        void onClick(MagnetWindow v);
-        void onTouchMoveStart(MagnetWindow v);
-        void onTouchMoving(MagnetWindow v ,Point decor , PointF touchPoint);
-        boolean onTouchMoveEnd(MagnetWindow v ,Point decor , PointF touchPoint);
+        void onClick(View v);
+        void onTouchMoveStart(View v);
+        void onTouchMoving(View v ,Point decor , PointF touchPoint);
+        boolean onTouchMoveEnd(View v ,Point decor , PointF touchPoint);
     }
 
 

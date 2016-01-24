@@ -4,7 +4,9 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 
 import com.garlicg.tiii.util.Toaster;
@@ -16,6 +18,7 @@ import timber.log.Timber;
 public class TiiiService extends Service implements FloatingManager.Listener{
 
     private FloatingManager mFloatingManager;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Nullable
     @Override
@@ -57,6 +60,12 @@ public class TiiiService extends Service implements FloatingManager.Listener{
     public void onStopRecord() {
         Timber.i("onStopRecord!");
         Toaster.show(this, "stopRecord");
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFloatingManager.initState();
+            }
+        },3000);
     }
 
 
