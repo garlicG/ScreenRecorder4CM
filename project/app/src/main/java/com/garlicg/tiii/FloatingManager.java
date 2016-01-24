@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
@@ -24,12 +25,16 @@ import timber.log.Timber;
 public class FloatingManager implements MagnetWindow.Listener {
 
     private final Context mContext;
+    private final Vibrator mVibrator;
     private final WindowManager mWindowManager;
     private MagnetWindow mMagnet;
     private TrashWindow mTrash;
     private DecorDummy mDecorDummy;
     private Listener mListener;
     private Handler mHandler = new Handler(Looper.getMainLooper());
+
+    private ObjectAnimator mRotate1;
+    private ObjectAnimator mRotate2;
 
     private static final int STATE_CONTROLLABLE = 0;
     private static final int STATE_RECORDING = 1;
@@ -46,6 +51,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
     public FloatingManager(Context context , Listener listener) {
         mContext = context;
+        mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mListener = listener;
     }
@@ -88,6 +94,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
         if(mState == STATE_CONTROLLABLE ){
             mState = STATE_RECORDING;
+            mVibrator.vibrate(15);
             mListener.onStartRecord();
 
             v.setActivated(true);
@@ -98,6 +105,7 @@ public class FloatingManager implements MagnetWindow.Listener {
         }
         else if(mState == STATE_RECORDING){
             mState = STATE_STOPPING;
+            mVibrator.vibrate(15);
             mListener.onStopRecord();
 
             v.setEnabled(false);
@@ -111,6 +119,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
     public void initState(){
         mState = STATE_CONTROLLABLE;
+        mVibrator.vibrate(800);
         mMagnet.getMagnetCircle().setEnabled(true);
         mMagnet.getMagnetImage().setColorFilter(0xffffffff);
         mRotate2.cancel();
@@ -164,7 +173,6 @@ public class FloatingManager implements MagnetWindow.Listener {
         anim.setDuration(duration);
         return anim;
     }
-    private ObjectAnimator mRotate1;
-    private ObjectAnimator mRotate2;
+
 
 }
