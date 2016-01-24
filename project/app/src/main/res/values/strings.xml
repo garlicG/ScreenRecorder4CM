@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Tiii</string>
+    <string name="settings">設定</string>
+    <string name="launch_tiii">Tiiiを起動</string>
+    <string name="video_size">ビデオサイズ</string>
+    <string name="show_touches">タップを表示</string>
+
 </resources>

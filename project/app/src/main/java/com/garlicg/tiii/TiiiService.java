@@ -37,7 +37,7 @@ public class TiiiService extends Service implements FloatingManager.Listener{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.i("onStartCommand %s", intent);
-        return START_REDELIVER_INTENT;
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -46,6 +46,7 @@ public class TiiiService extends Service implements FloatingManager.Listener{
         Timber.i("TiiiService Destroy!");
         mFloatingManager.onDestroy();
     }
+
 
     //////////////
     // FloatingManagerからのコールバック
@@ -68,15 +69,10 @@ public class TiiiService extends Service implements FloatingManager.Listener{
         },3000);
     }
 
-
     @Override
     public void onFinishFloating() {
         stopSelf();
     }
-
-
-
-
 
     /**
      * 通知を表示します。

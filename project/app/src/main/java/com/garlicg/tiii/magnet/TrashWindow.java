@@ -26,6 +26,7 @@ public class TrashWindow extends FrameLayout{
         return (TrashWindow) inflater.inflate(R.layout.widget_trash_window , null , false);
     }
 
+
     @SuppressLint("RtlHardcoded")
     public static WindowManager.LayoutParams createWindowParams(Context context){
         final int windowSize = DisplayUtils.dpToPx(context.getResources(), WINDOW_SIZE_DP);
@@ -41,17 +42,16 @@ public class TrashWindow extends FrameLayout{
         return params;
     }
 
-
     public static int WINDOW_SIZE_DP = 120;
     private int mWindowSize;
-    private WindowManager mWindowManager;
-    private DecorDummy mDecorDummy;
+    private View mTrashImage;
 
 
     public TrashWindow(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
+
 
     public TrashWindow(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -60,45 +60,42 @@ public class TrashWindow extends FrameLayout{
 
 
     public void init(Context context){
-        mWindowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         final Resources res = context.getResources();
-        mWindowSize = DisplayUtils.dpToPx(res , WINDOW_SIZE_DP);
+        mWindowSize = DisplayUtils.dpToPx(res, WINDOW_SIZE_DP);
     }
 
-
-    View mTrashView;
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mTrashView = ViewFinder.byId(this , R.id.trashImage);
+        mTrashImage = ViewFinder.byId(this , R.id.trashImage);
     }
+
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mTrashView.setTranslationY(mWindowSize);
+        mTrashImage.setTranslationY(mWindowSize);
     }
 
-    public void setDecorDummy(DecorDummy decorDummy){
-        mDecorDummy = decorDummy;
-    }
 
     public void show(){
-        mTrashView.animate()
+        mTrashImage.animate()
                 .translationY(0)
                 .setDuration(200)
                 .setInterpolator(Interpolators.DECELERATE)
                 .start();
     }
 
+
     public void hide(){
-        mTrashView.animate()
+        mTrashImage.animate()
                 .translationY(mWindowSize)
                 .setDuration(200)
                 .setInterpolator(Interpolators.ACCELERATE)
                 .start();
     }
+
 
     public boolean mScaledUp = false;
 
@@ -109,8 +106,9 @@ public class TrashWindow extends FrameLayout{
         else scaleNormal();
     }
 
+
     private void scaleUp(){
-        mTrashView.animate()
+        mTrashImage.animate()
                 .scaleX(1.8f)
                 .scaleY(1.8f)
                 .setDuration(100)
@@ -118,8 +116,9 @@ public class TrashWindow extends FrameLayout{
                 .start();
     }
 
+
     private void scaleNormal(){
-        mTrashView.animate()
+        mTrashImage.animate()
                 .scaleX(1f)
                 .scaleY(1f)
                 .setDuration(100)
@@ -127,10 +126,11 @@ public class TrashWindow extends FrameLayout{
                 .start();
     }
 
+
     public void disappear(long duration){
-        mTrashView.setScaleX(1.8f);
-        mTrashView.setScaleY(1.8f);
-        mTrashView.animate()
+        mTrashImage.setScaleX(1.8f);
+        mTrashImage.setScaleY(1.8f);
+        mTrashImage.animate()
                 .scaleX(0f)
                 .scaleY(0f)
                 .setDuration(duration)
@@ -138,8 +138,9 @@ public class TrashWindow extends FrameLayout{
                 .start();
     }
 
+
     public boolean isHit(Point decor, PointF touchPoint){
-        // Gravity BOTTOM | CENTER_VERTICALでのこのView位置
+        // Gravity BOTTOM | CENTER_HORIZONTALでのこのView位置
         int left = decor.x /2 - getWidth()/2;
         int right = decor.x /2 + getWidth()/2;
         int top = decor.y - getHeight();

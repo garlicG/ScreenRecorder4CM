@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import com.garlicg.tiii.magnet.DecorDummy;
 import com.garlicg.tiii.magnet.MagnetWindow;
 import com.garlicg.tiii.magnet.TrashWindow;
-import com.garlicg.tiii.util.ViewFinder;
 
 import timber.log.Timber;
 
@@ -64,7 +63,6 @@ public class FloatingManager implements MagnetWindow.Listener {
         mWindowManager.addView(mDecorDummy, DecorDummy.createWindowParams());
 
         mTrash = TrashWindow.createInstance(mContext);
-        mTrash.setDecorDummy(mDecorDummy);
         mWindowManager.addView(mTrash, TrashWindow.createWindowParams(mContext));
 
         mMagnet = MagnetWindow.createInstance(mContext);
@@ -222,7 +220,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     private ObjectAnimator genRotateAnimation(View v ,long duration){
-        ObjectAnimator anim = ObjectAnimator.ofFloat(v, View.ROTATION, v.getRotation()+360);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(v, View.ROTATION, v.getRotation() + 360);
         anim.setRepeatCount(ValueAnimator.INFINITE);
         anim.setRepeatMode(ValueAnimator.RESTART);
         anim.setInterpolator(new LinearInterpolator());
