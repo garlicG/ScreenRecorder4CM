@@ -185,14 +185,14 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     @Override
-    public void onTouchMoveStart(MagnetWindow window) {
+    public void onDragStart(MagnetWindow window) {
         if(mState != STATE_CONTROLLABLE) return;
         mTrash.show();
     }
 
 
     @Override
-    public void onTouchMoving(MagnetWindow window ,Point decor, PointF touchPoint) {
+    public void onDragging(MagnetWindow window, Point decor, PointF touchPoint) {
         if(mState != STATE_CONTROLLABLE) return;
 
         boolean isHit = mTrash.isHit(decor, touchPoint);
@@ -201,7 +201,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     @Override
-    public boolean onTouchMoveEnd(MagnetWindow window ,Point decor, PointF touchPoint) {
+    public boolean onDrop(MagnetWindow window, Point decor, PointF touchPoint) {
         if(mState != STATE_CONTROLLABLE) return false;
 
         if(mTrash.isHit(decor, touchPoint)){

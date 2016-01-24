@@ -250,7 +250,7 @@ public class MagnetWindow extends FrameLayout{
                 if ((xDiff + yDiff) / 2 > mSlop) {
                     if (mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
                     else mVelocityTracker.clear();
-                    mListener.onTouchMoveStart(this);
+                    mListener.onDragStart(this);
                     mMoving = true;
                 }
             }
@@ -258,7 +258,7 @@ public class MagnetWindow extends FrameLayout{
                  float toX = touchPoint.x - getWidth() /2;
                  float toY = touchPoint.y - getHeight()/2;
                  locate(toX, toY);
-                 mListener.onTouchMoving(this ,mDecorSizeCache , touchPoint);
+                 mListener.onDragging(this, mDecorSizeCache, touchPoint);
                  event.offsetLocation(toX, toY);
                  mVelocityTracker.addMovement(event);
             }
@@ -274,7 +274,7 @@ public class MagnetWindow extends FrameLayout{
                 mVelocityTracker.computeCurrentVelocity(50, mMaxVelocity);
 
                 // おしまい
-                if(mListener.onTouchMoveEnd(this ,mDecorSizeCache , touchPoint)){
+                if(mListener.onDrop(this, mDecorSizeCache, touchPoint)){
                     // none
                 }
                 // 継続
@@ -310,9 +310,9 @@ public class MagnetWindow extends FrameLayout{
 
     public interface Listener{
         void onClick(MagnetWindow window);
-        void onTouchMoveStart(MagnetWindow window);
-        void onTouchMoving(MagnetWindow window ,Point decor , PointF touchPoint);
-        boolean onTouchMoveEnd(MagnetWindow window ,Point decor , PointF touchPoint);
+        void onDragStart(MagnetWindow window);
+        void onDragging(MagnetWindow window, Point decor, PointF touchPoint);
+        boolean onDrop(MagnetWindow window, Point decor, PointF touchPoint);
     }
 
 
