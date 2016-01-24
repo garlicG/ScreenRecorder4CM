@@ -8,10 +8,11 @@
         android:layout_width="63dp"
         android:layout_height="63dp"
         android:layout_gravity="center"
-        android:background="@drawable/circle_button_dark"
+        android:background="@drawable/circle_button_white"
         android:scaleType="center"
         android:src="@drawable/ic_menu_delete"
-        android:tint="#fff" />
+        android:tintMode="multiply"
+        android:tint="#f00" />
 
 
 </com.garlicg.tiii.magnet.TrashWindow>
