@@ -7,14 +7,13 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.garlicg.tiii.magnet.FloatingManager;
-import com.garlicg.tiii.magnet.MagnetLayout;
+import com.garlicg.tiii.util.Toaster;
 
 import timber.log.Timber;
 
 /**
  */
-public class FloatingService extends Service implements MagnetLayout.OnMagnetEventListener{
+public class TiiiService extends Service implements FloatingManager.Listener{
 
     private FloatingManager mFloatingManager;
 
@@ -28,7 +27,7 @@ public class FloatingService extends Service implements MagnetLayout.OnMagnetEve
     @Override
     public void onCreate() {
         super.onCreate();
-        mFloatingManager = new FloatingManager(this);
+        mFloatingManager = new FloatingManager(this , this);
         mFloatingManager.onCreate();
     }
 
@@ -41,8 +40,33 @@ public class FloatingService extends Service implements MagnetLayout.OnMagnetEve
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Timber.i("TiiiService Destroy!");
         mFloatingManager.onDestroy();
     }
+
+    //////////////
+    // FloatingManagerからのコールバック
+
+    @Override
+    public void onStartRecord() {
+        Timber.i("onStartRecord!");
+    }
+
+
+    @Override
+    public void onStopRecord() {
+        Timber.i("onStopRecord!");
+        Toaster.show(this, "stopRecord");
+    }
+
+
+    @Override
+    public void onFinishFloating() {
+        stopSelf();
+    }
+
+
+
 
 
     /**
@@ -63,12 +87,6 @@ public class FloatingService extends Service implements MagnetLayout.OnMagnetEve
         PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(notifyPendingIntent);
         return null;
-    }
-
-
-    @Override
-    public void onMagnetQuit() {
-        stopSelf();
     }
 
 }

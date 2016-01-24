@@ -13,6 +13,12 @@ public class DecorDummy extends View {
         super(context);
     }
 
+
+    public static DecorDummy createInstance(Context context){
+        return new DecorDummy(context);
+    }
+
+
     public static WindowManager.LayoutParams createWindowParams(){
         return new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,

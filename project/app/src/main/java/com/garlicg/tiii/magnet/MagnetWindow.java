@@ -10,6 +10,7 @@ import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -18,32 +19,23 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 
 import com.garlicg.tiii.R;
 import com.garlicg.tiii.util.DisplayUtils;
+import com.garlicg.tiii.util.Interpolators;
 
 import timber.log.Timber;
 
-/**
- */
 public class MagnetWindow extends FrameLayout{
 
-    private static final String KEY_X = "x";
-    private static final String KEY_Y = "y";
-    private static final OvershootInterpolator OVER_SHOOT_INTERPOLATOR = new OvershootInterpolator();
-
-    private WindowManager mWindowManager;
-    private int mTouchYDiff = 0;
-    VelocityTracker mVelocityTracker = null;
-    private int mMaxVelocity;
-    private int mSlop;
-    private DecorDummy mDecorDummy;
-    private float mInitialTouchX;
-    private float mInitialTouchY;
+    @SuppressLint("InflateParams")
+    public static MagnetWindow createInstance(Context context){
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        return (MagnetWindow) inflater.inflate(R.layout.widget_magnet_window, null, false);
+    }
 
 
     @SuppressLint("RtlHardcoded")
@@ -55,12 +47,22 @@ public class MagnetWindow extends FrameLayout{
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-//                        | WindowManager.LayoutParams.FLAG_FULLSCREEN
-//                        | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
                 , PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.LEFT | Gravity.TOP;
         return params;
     }
+
+
+    private static final String KEY_X = "x";
+    private static final String KEY_Y = "y";
+    private WindowManager mWindowManager;
+    private int mTouchYDiff = 0;
+    VelocityTracker mVelocityTracker = null;
+    private int mMaxVelocity;
+    private int mSlop;
+    private DecorDummy mDecorDummy;
+    private float mInitialTouchX;
+    private float mInitialTouchY;
 
 
     public MagnetWindow(Context context, AttributeSet attrs) {
@@ -164,7 +166,7 @@ public class MagnetWindow extends FrameLayout{
         PropertyValuesHolder pY = PropertyValuesHolder.ofInt(KEY_Y, lp.y, (int) toY);
         ValueAnimator animXY = ValueAnimator.ofPropertyValuesHolder(pX, pY);
         animXY.setDuration(200);
-        animXY.setInterpolator(OVER_SHOOT_INTERPOLATOR);
+        animXY.setInterpolator(Interpolators.OVER_SHOOT);
         animXY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -176,14 +178,30 @@ public class MagnetWindow extends FrameLayout{
         animXY.start();
     }
 
+    ///////////////
+    // 状態管理とか
+
+    private boolean mQuiting = false;
+    private boolean mMoving = false;
+
+
+    public void disappear(long duration){
+        mQuiting = true;
+        ScaleAnimation scale = new ScaleAnimation(1f , 0f ,1f , 0f , getWidth()/2,getHeight()/2);
+        scale.setFillAfter(true);
+        scale.setInterpolator(Interpolators.ACCELERATE);
+        scale.setDuration(duration);
+        findViewById(R.id.magnetFrame).startAnimation(scale);
+    }
+
 
     ///////////////
     // タッチイベント
 
-    private boolean mMoving = false;
-
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
+        if(mQuiting)return false;
+
         final int action = event.getAction();
 
         if (action == MotionEvent.ACTION_DOWN) {
@@ -202,6 +220,7 @@ public class MagnetWindow extends FrameLayout{
                 if ((xDiff + yDiff) / 2 > mSlop) {
                     if (mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
                     else mVelocityTracker.clear();
+                    mListener.onTouchMoveStart(this);
                     mMoving = true;
                 }
             }
@@ -209,6 +228,7 @@ public class MagnetWindow extends FrameLayout{
                  float toX = touchPoint.x - getWidth() /2;
                  float toY = touchPoint.y - getHeight()/2;
                  locate(toX, toY);
+                 mListener.onTouchMoving(this ,mDecorSizeCache , touchPoint);
                  event.offsetLocation(toX, toY);
                  mVelocityTracker.addMovement(event);
             }
@@ -218,15 +238,14 @@ public class MagnetWindow extends FrameLayout{
             final PointF touchPoint = getTouchPoint(event);
 
             if(!mMoving){
+                mListener.onClick(this);
             }
             else{
-                // FIXME 初速をアニメーションに適用できてない。Npx/50msはてきとう
                 mVelocityTracker.computeCurrentVelocity(50, mMaxVelocity);
 
                 // おしまい
-                if (/* mTrashEnable && hitTrashCircle(x, y)*/ false) {
-//                mQuiting = true;
-//                dismissHitTrash();
+                if(mListener.onTouchMoveEnd(this ,mDecorSizeCache , touchPoint)){
+                    // none
                 }
                 // 継続
                 else {
@@ -244,10 +263,8 @@ public class MagnetWindow extends FrameLayout{
 
                     // アニメで動かす
                     locateAnimation(toX, toY);
-
-                    // ゴミ箱を隠す
-//                hideTrashToBottom(false);
                 }
+
                 mVelocityTracker.recycle();
                 mVelocityTracker = null;
             }
@@ -257,4 +274,21 @@ public class MagnetWindow extends FrameLayout{
         return false;
     }
 
+
+    //////////////
+    // Listener
+
+    public interface Listener{
+        void onClick(MagnetWindow v);
+        void onTouchMoveStart(MagnetWindow v);
+        void onTouchMoving(MagnetWindow v ,Point decor , PointF touchPoint);
+        boolean onTouchMoveEnd(MagnetWindow v ,Point decor , PointF touchPoint);
+    }
+
+
+    public Listener mListener;
+
+    public void setListener(Listener listener){
+        mListener = listener;
+    }
 }

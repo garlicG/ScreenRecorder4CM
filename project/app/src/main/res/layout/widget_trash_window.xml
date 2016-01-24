@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.garlicg.tiii.magnet.TrashWindow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/trashImage"
+        android:layout_width="63dp"
+        android:layout_height="63dp"
+        android:layout_gravity="center"
+        android:background="@drawable/circle_button_dark"
+        android:scaleType="center"
+        android:src="@drawable/ic_menu_delete"
+        android:tint="#fff" />
+
+
+</com.garlicg.tiii.magnet.TrashWindow>
