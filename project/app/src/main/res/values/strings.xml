@@ -4,5 +4,6 @@
     <string name="launch_tiii">Tiiiを起動</string>
     <string name="video_size">ビデオサイズ</string>
     <string name="show_touches">タップを表示</string>
+    <string name="mute">Tiiiボタンはキャプチャしない</string>
 
 </resources>

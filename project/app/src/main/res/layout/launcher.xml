@@ -6,14 +6,14 @@
 
     <Button
         android:id="@+id/startChatHead"
-        android:text="Start RecordButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Start RecordButton" />
 
     <Button
         android:id="@+id/stopChatHead"
-        android:text="Sample Activity"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Sample Activity" />
 
 </LinearLayout>

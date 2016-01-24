@@ -26,6 +26,7 @@ public class LauncherActivity extends Activity {
 
 
     boolean mToggle = true;
+
     /**
      * onCreate
      */
