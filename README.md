@@ -1,3 +1,3 @@
-# tiii
+# ScreenRecorderCT
 
-Simple capture screen video app.
+Cut-in trigger plug-in to record the screen. 
