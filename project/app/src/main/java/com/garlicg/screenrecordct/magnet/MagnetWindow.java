@@ -1,4 +1,4 @@
-package com.garlicg.tiii.magnet;
+package com.garlicg.screenrecordct.magnet;
 
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
@@ -25,10 +25,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.garlicg.tiii.R;
-import com.garlicg.tiii.util.DisplayUtils;
-import com.garlicg.tiii.util.Interpolators;
-import com.garlicg.tiii.util.ViewFinder;
+import com.garlicg.screenrecordct.R;
+import com.garlicg.screenrecordct.util.DisplayUtils;
+import com.garlicg.screenrecordct.util.Interpolators;
+import com.garlicg.screenrecordct.util.ViewFinder;
 
 import timber.log.Timber;
 

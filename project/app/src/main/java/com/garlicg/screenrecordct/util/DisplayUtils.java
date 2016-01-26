@@ -1,4 +1,4 @@
-package com.garlicg.tiii.util;
+package com.garlicg.screenrecordct.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

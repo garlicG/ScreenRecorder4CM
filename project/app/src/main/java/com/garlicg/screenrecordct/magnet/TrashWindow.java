@@ -1,4 +1,4 @@
-package com.garlicg.tiii.magnet;
+package com.garlicg.screenrecordct.magnet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,10 +13,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.garlicg.tiii.R;
-import com.garlicg.tiii.util.DisplayUtils;
-import com.garlicg.tiii.util.Interpolators;
-import com.garlicg.tiii.util.ViewFinder;
+import com.garlicg.screenrecordct.R;
+import com.garlicg.screenrecordct.util.DisplayUtils;
+import com.garlicg.screenrecordct.util.Interpolators;
+import com.garlicg.screenrecordct.util.ViewFinder;
 
 public class TrashWindow extends FrameLayout{
 

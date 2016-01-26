@@ -13,7 +13,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.garlicg.tiii"
+        applicationId "com.garlicg.screenrecordct"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1

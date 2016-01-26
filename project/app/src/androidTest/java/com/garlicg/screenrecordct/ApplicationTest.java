@@ -1,4 +1,4 @@
-package com.garlicg.tiii;
+package com.garlicg.screenrecordct;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,4 +1,4 @@
-package com.garlicg.tiii.magnet;
+package com.garlicg.screenrecordct.magnet;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -17,9 +17,9 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.garlicg.tiii.R;
-import com.garlicg.tiii.util.DisplayUtils;
-import com.garlicg.tiii.util.ViewFinder;
+import com.garlicg.screenrecordct.R;
+import com.garlicg.screenrecordct.util.DisplayUtils;
+import com.garlicg.screenrecordct.util.ViewFinder;
 
 
 /**

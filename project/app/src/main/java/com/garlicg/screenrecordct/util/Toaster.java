@@ -1,4 +1,4 @@
-package com.garlicg.tiii.util;
+package com.garlicg.screenrecordct.util;
 
 import android.content.Context;
 import android.widget.Toast;

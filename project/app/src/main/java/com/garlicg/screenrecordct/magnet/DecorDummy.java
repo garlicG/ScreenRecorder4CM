@@ -1,4 +1,4 @@
-package com.garlicg.tiii.magnet;
+package com.garlicg.screenrecordct.magnet;
 
 import android.content.Context;
 import android.graphics.PixelFormat;

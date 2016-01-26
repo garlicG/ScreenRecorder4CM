@@ -1,4 +1,4 @@
-package com.garlicg.tiii;
+package com.garlicg.screenrecordct;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.garlicg.tiii.magnet.MagnetLayout;
-import com.garlicg.tiii.util.ViewFinder;
+import com.garlicg.screenrecordct.magnet.MagnetLayout;
+import com.garlicg.screenrecordct.util.ViewFinder;
 
 /**
  */

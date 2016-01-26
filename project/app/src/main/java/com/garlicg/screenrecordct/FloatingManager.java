@@ -1,4 +1,4 @@
-package com.garlicg.tiii;
+package com.garlicg.screenrecordct;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -13,9 +13,9 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.garlicg.tiii.magnet.DecorDummy;
-import com.garlicg.tiii.magnet.MagnetWindow;
-import com.garlicg.tiii.magnet.TrashWindow;
+import com.garlicg.screenrecordct.magnet.DecorDummy;
+import com.garlicg.screenrecordct.magnet.MagnetWindow;
+import com.garlicg.screenrecordct.magnet.TrashWindow;
 
 import timber.log.Timber;
 

@@ -1,4 +1,4 @@
-package com.garlicg.tiii;
+package com.garlicg.screenrecordct;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -9,13 +9,13 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 
-import com.garlicg.tiii.util.Toaster;
+import com.garlicg.screenrecordct.util.Toaster;
 
 import timber.log.Timber;
 
 /**
  */
-public class TiiiService extends Service implements FloatingManager.Listener{
+public class RecordService extends Service implements FloatingManager.Listener{
 
     private FloatingManager mFloatingManager;
     private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -43,7 +43,7 @@ public class TiiiService extends Service implements FloatingManager.Listener{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Timber.i("TiiiService Destroy!");
+        Timber.i("RecordService Destroy!");
         mFloatingManager.onDestroy();
     }
 

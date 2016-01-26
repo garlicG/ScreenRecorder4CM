@@ -1,4 +1,4 @@
-package com.garlicg.tiii;
+package com.garlicg.screenrecordct;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,8 +10,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
-import com.garlicg.tiii.util.ExtDebugTree;
-import com.garlicg.tiii.util.ViewFinder;
+import com.garlicg.screenrecordct.util.ExtDebugTree;
+import com.garlicg.screenrecordct.util.ViewFinder;
 
 import timber.log.Timber;
 
@@ -40,7 +40,7 @@ public class LauncherActivity extends Activity {
         startChatHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext() , TiiiService.class);
+                Intent intent = new Intent(v.getContext() , RecordService.class);
                 if(mToggle){
                     startService(intent);
                 }
@@ -84,13 +84,13 @@ public class LauncherActivity extends Activity {
     private boolean showChatHead(Context context) {
         // API22以下かチェック
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            context.startService(new Intent(context, TiiiService.class));
+            context.startService(new Intent(context, RecordService.class));
             return true;
         }
 
         // 他のアプリの上に表示できるかチェック
         if (Settings.canDrawOverlays(context)) {
-            context.startService(new Intent(context, TiiiService.class));
+            context.startService(new Intent(context, RecordService.class));
             return true;
         }
 
