@@ -8,6 +8,11 @@
         <item name="windowActionBar">false</item>
         <item name="colorAccent">@color/appRed</item>
         <item name="colorPrimary">@color/appRed</item>
+        <item name="alertDialogTheme">@style/LightAlertDialogStyle</item>
+    </style>
+
+    <style name="LightAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/appRed</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.AppCompat">
