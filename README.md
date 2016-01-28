@@ -1,3 +1,3 @@
-# ScreenRecorderCT
+# ScreenRecorder4CM
 
-Cut-in trigger plug-in to record the screen. 
+Cut-in Manager plug-in for screen record. 
