@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,10 +32,13 @@ public class SettingsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         RecordService.requestQuit(this);
-
         AppPrefs prefs = new AppPrefs(this);
 
-        setContentView(R.layout.launcher);
+        setContentView(R.layout.activity_settings);
+
+        // Toolbar
+        Toolbar toolbar = ViewFinder.byId(this, R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // launchButton
         View launchButton = ViewFinder.byId(this, R.id.startChatHead);
@@ -97,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity
             requestCapture();
         } else {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                // FIXME Show dialog before show settings Activity.
+                // FIXME Show dialog before show activity_settings Activity.
                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 Uri uri = Uri.fromParts("package", getPackageName(), null);
                 intent.setData(uri);
