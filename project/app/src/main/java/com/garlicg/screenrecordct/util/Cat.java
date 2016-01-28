@@ -40,6 +40,19 @@ public class Cat {
         if (BuildConfig.DEBUG) Log.e(TAG_NAME, createMessage(msg));
     }
 
+    /**
+     * SendError to Crashlytics as Non-Fatal
+     */
+    public static void sendE(Throwable e) {
+        if(BuildConfig.DEBUG){
+            Log.e(TAG_NAME, createMessage(e.toString()));
+        }
+
+        if (BuildConfig.USE_CRASHLYTICS){
+            Crashlytics.logException(e);
+        }
+    }
+
     private static String sTimeStampTag;
     private static long sTmpTime;
 
@@ -57,27 +70,4 @@ public class Cat {
         Log.i("[Tack]" + sTimeStampTag, createMessage("[" + Long.toString(diffTime) + "ms]" + message));
         sTmpTime = currentTime;
     }
-
-
-    public static void sendE(Throwable e , @NonNull String msg) {
-        sendE(msg + " (" + e.toString() + ")");
-    }
-
-    public static void sendE(@NonNull String msg) {
-        if(BuildConfig.DEBUG){
-            Log.e(TAG_NAME, createMessage(msg));
-        }
-
-        if (BuildConfig.USE_CRASHLYTICS){
-            Crashlytics.logException(new MessageException(msg));
-        }
-    }
-
-    public static class MessageException extends java.lang.Exception{
-
-        public MessageException(String detail){
-            super(detail);
-        }
-    }
-
 }
