@@ -2,6 +2,8 @@
     package="com.garlicg.screenrecordct">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -10,21 +12,35 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.garlicg.screenrecordct.LauncherActivity"
-            android:label="@string/app_name">
+            android:name=".SettingsActivity"
+            android:launchMode="singleTask"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
-        <activity
-            android:name="com.garlicg.screenrecordct.BubbleSampleActivity"
-            android:label="@string/app_name">
-        </activity>
+        <activity-alias
+            android:name=".LauncherDummy"
+            android:targetActivity=".SettingsActivity">
+
+        </activity-alias>
+
+        <activity-alias
+            android:name=".FromManager"
+            android:targetActivity=".SettingsActivity">
+            <intent-filter>
+                <action android:name="com.garlicg.cutin.action.PICK" />
+                <category android:name="com.garlicg.cutin.category.TRIGGER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity-alias>
 
         <service
             android:name=".RecordService"
+            android:process=":recorder"
             android:exported="false" />
 
 

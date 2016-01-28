@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <com.garlicg.screenrecordct.magnet.MagnetLayout
+    <com.garlicg.screenrecordct.practice.MagnetLayout
         android:id="@+id/magnetLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -47,7 +47,7 @@
         </FrameLayout>
 
 
-    </com.garlicg.screenrecordct.magnet.MagnetLayout>
+    </com.garlicg.screenrecordct.practice.MagnetLayout>
 
 
 </LinearLayout>

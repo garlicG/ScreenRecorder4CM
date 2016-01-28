@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 /**
+ * WindowSize測るためのダミー
  */
 public class DecorDummy extends View {
 

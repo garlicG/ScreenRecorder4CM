@@ -17,8 +17,6 @@ import com.garlicg.screenrecordct.magnet.DecorDummy;
 import com.garlicg.screenrecordct.magnet.MagnetWindow;
 import com.garlicg.screenrecordct.magnet.TrashWindow;
 
-import timber.log.Timber;
-
 /**
  */
 public class FloatingManager implements MagnetWindow.Listener {
@@ -43,9 +41,9 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     public interface Listener{
-        void onStartRecord();
-        void onStopRecord();
-        void onFinishFloating();
+        void onClickStartRecord();
+        void onClickStopRecord();
+        void onHitFinishFloating();
     }
 
 
@@ -57,8 +55,7 @@ public class FloatingManager implements MagnetWindow.Listener {
     }
 
 
-    public void onCreate() {
-        Timber.i("onCreate!");
+    void setupWindows() {
         mDecorDummy = DecorDummy.createInstance(mContext);
         mWindowManager.addView(mDecorDummy, DecorDummy.createWindowParams());
 
@@ -74,8 +71,6 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     public void onDestroy() {
-        Timber.i("onDestroy!");
-
         mWindowManager.removeView(mMagnet);
         mMagnet = null;
 
@@ -115,7 +110,7 @@ public class FloatingManager implements MagnetWindow.Listener {
         else if(mState == STATE_RECORDING){
             mState = STATE_STOPPING;
             mVibrator.vibrate(15);
-            mListener.onStopRecord();
+            mListener.onClickStopRecord();
 
             View v = window.getView();
             v.setEnabled(false);
@@ -165,7 +160,7 @@ public class FloatingManager implements MagnetWindow.Listener {
         @Override
         public void run() {
             mState = STATE_RECORDING;
-            mListener.onStartRecord();
+            mListener.onClickStartRecord();
 
             View v = mMagnet.getView();
             v.setActivated(true);
@@ -208,7 +203,7 @@ public class FloatingManager implements MagnetWindow.Listener {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mListener.onFinishFloating();
+                    mListener.onHitFinishFloating();
                 }
             },200);
             return true;

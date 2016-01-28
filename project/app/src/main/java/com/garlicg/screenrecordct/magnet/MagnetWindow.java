@@ -30,8 +30,6 @@ import com.garlicg.screenrecordct.util.DisplayUtils;
 import com.garlicg.screenrecordct.util.Interpolators;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
-import timber.log.Timber;
-
 public class MagnetWindow extends FrameLayout{
 
     @SuppressLint("InflateParams")
@@ -85,6 +83,7 @@ public class MagnetWindow extends FrameLayout{
     public void init(Context context){
         mWindowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         mSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        ViewConfiguration.getTapTimeout();
         mMaxVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
     }
 
@@ -104,7 +103,7 @@ public class MagnetWindow extends FrameLayout{
         if(oldw == 0 && w > 0){
             // 右上に配置
             WindowManager.LayoutParams lp = (WindowManager.LayoutParams) getLayoutParams();
-            lp.x = DisplayUtils.getWindowSize(getContext()).x - w;
+            lp.x = DisplayUtils.getDisplaySize(getContext()).x - w;
             mWindowManager.updateViewLayout(this, lp);
 
             ScaleAnimation scale = new ScaleAnimation(0f, 1f, 0f, 1f , w/2 , h/2);
@@ -158,7 +157,6 @@ public class MagnetWindow extends FrameLayout{
         mDecorSizeCache.y = mDecorDummy.getHeight();
 
         mTouchYDiff = mDisplaySizeCache.y - mDecorDummy.getHeight();
-        Timber.i("displaySize:" + mDisplaySizeCache.y + " ,decorHeight:" + mDecorDummy.getHeight());
     }
 
 
@@ -289,7 +287,6 @@ public class MagnetWindow extends FrameLayout{
                     float toY = (touchPoint.y - height / 2) + mVelocityTracker.getYVelocity();
                     toY = Math.max(0, toY);
                     toY = Math.min(getParentHeight() - height, toY);
-                    Timber.i("YVelocity:" + mVelocityTracker.getYVelocity());
 
                     // アニメで動かす
                     locateAnimation(toX, toY);

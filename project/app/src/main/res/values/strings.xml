@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">スクリーンレコーダー</string>
     <string name="settings">設定</string>
-    <string name="launch_tiii">録画ボタンを起動</string>
     <string name="video_size">ビデオサイズ</string>
-    <string name="show_touches">タップを表示</string>
-    <string name="mute">撮影中は録画ボタンを非表示にする</string>
+    <string name="cutin_start_offset">録画開始後のカットイン表示タイミング</string>
+    <string name="record_button_invisible">撮影中は録画ボタンを非表示にする</string>
+
 
 </resources>

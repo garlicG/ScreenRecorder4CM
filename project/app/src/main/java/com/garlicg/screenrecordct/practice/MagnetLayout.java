@@ -1,4 +1,4 @@
-package com.garlicg.screenrecordct.magnet;
+package com.garlicg.screenrecordct.practice;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
