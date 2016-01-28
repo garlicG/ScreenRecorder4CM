@@ -20,23 +20,22 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.garlicg.screenrecordct.util.Toaster;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
 public class SettingsActivity extends AppCompatActivity
-        implements ActivityCompat.OnRequestPermissionsResultCallback
-{
+        implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int REQUEST_CAPTURE = 1;
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
+    private AppPrefs mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         RecordService.requestQuit(this);
-        AppPrefs prefs = new AppPrefs(this);
+        mPrefs = new AppPrefs(this);
 
         setContentView(R.layout.activity_settings);
 
@@ -53,18 +52,21 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        createVideoSize(savedInstanceState, prefs);
-        createFireCutin(savedInstanceState, prefs);
-        createAutoStop(savedInstanceState, prefs);
-        createTriggerTitle(savedInstanceState , prefs);
-        createTriggerMessage(savedInstanceState , prefs);
-        createInvisibleRecord(savedInstanceState, prefs);
-        createVideoList(savedInstanceState , prefs);
+        createVideoSize(savedInstanceState);
+        createFireCutin(savedInstanceState);
+        createAutoStop(savedInstanceState);
+        createTriggerTitle(savedInstanceState);
+        createTriggerMessage(savedInstanceState);
+        createInvisibleRecord(savedInstanceState);
+        createVideoList(savedInstanceState);
     }
 
 
-    private void createVideoSize(Bundle savedInstanceState , AppPrefs prefs){
-        int vp = prefs.getVideoPercentage();
+    /**
+     * VideoSize
+     */
+    private void createVideoSize(Bundle savedInstanceState) {
+        int vp = mPrefs.getVideoPercentage();
         final VideoPercentage[] spinnerItems = AppPrefs.videoPercentages();
         int spinnerSelection = AppPrefs.findVideoPercentagePosition(spinnerItems, vp);
 
@@ -96,18 +98,42 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
-    private void createFireCutin(Bundle savedInstanceState , AppPrefs prefs){
-        TextView valueView = ViewFinder.byId(this , R.id.fireCutinValue);
-        valueView.setOnClickListener(new View.OnClickListener() {
+    private TextView mFireCutinValueView;
+
+    /**
+     * FireCutin
+     */
+    private void createFireCutin(Bundle savedInstanceState) {
+        mFireCutinValueView = ViewFinder.byId(this, R.id.fireCutinValue);
+        mFireCutinValueView.setText(getString(R.string.x_seconds_later, mPrefs.getFireCutinOffsetSec()));
+        mFireCutinValueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                showFireCutinDialog();
             }
         });
     }
 
+    void showFireCutinDialog() {
+        final ValidateIntDialogBuilder.Callback callback = new ValidateIntDialogBuilder.Callback() {
+            @Override
+            public boolean onValidate(int value) {
+                return value >= 0 && value <= 999;
+            }
+            @Override
+            public void onOk(int value) {
+                mFireCutinValueView.setText(getString(R.string.x_seconds_later, value));
+                mPrefs.saveFireCutinOffsetSec(value);
+            }
+        };
+        ValidateIntDialogBuilder.build(this
+                , mPrefs.getFireCutinOffsetSec()
+                , null
+                , callback
+        ).show();
+    }
 
-    private void createAutoStop(Bundle savedInstanceState , AppPrefs prefs){
+    private void createAutoStop(Bundle savedInstanceState){
         TextView valueView = ViewFinder.byId(this , R.id.autoStopValue);
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +144,11 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
-    private void createTriggerTitle(Bundle savedInstanceState , AppPrefs prefs){
-        TextView valueView = ViewFinder.byId(this , R.id.triggerTitleValue);
+    /**
+     * TriggerTitle
+     */
+    private void createTriggerTitle(Bundle savedInstanceState) {
+        TextView valueView = ViewFinder.byId(this, R.id.triggerTitleValue);
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,8 +158,11 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
-    private void createTriggerMessage(Bundle savedInstanceState , AppPrefs prefs){
-        TextView valueView = ViewFinder.byId(this , R.id.triggerMessageValue);
+    /**
+     * TriggerMessage
+     */
+    private void createTriggerMessage(Bundle savedInstanceState) {
+        TextView valueView = ViewFinder.byId(this, R.id.triggerMessageValue);
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,8 +172,11 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
-    private void createInvisibleRecord(Bundle savedInstanceState , AppPrefs prefs){
-        Switch sw = ViewFinder.byId(this , R.id.invisibleRecord);
+    /**
+     * InvisibleRecord
+     */
+    private void createInvisibleRecord(Bundle savedInstanceState) {
+        Switch sw = ViewFinder.byId(this, R.id.invisibleRecord);
         sw.setChecked(false);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -152,8 +187,11 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
-    private void createVideoList(Bundle savedInstanceState , AppPrefs prefs){
-        View view = ViewFinder.byId(this , R.id.videoList);
+    /**
+     * VideoList
+     */
+    private void createVideoList(Bundle savedInstanceState) {
+        View view = ViewFinder.byId(this, R.id.videoList);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +203,7 @@ public class SettingsActivity extends AppCompatActivity
 
     /**
      * 録画サービス立ち上げるけどパーミッションの壁が立ちはだかる
-     *
+     * <p/>
      * RuntimePermission (ExternalStorage)
      * -> request intent for MEDIA_PROJECTION_SERVICE
      * -> start RecordService

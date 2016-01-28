@@ -41,5 +41,16 @@ public class AppPrefs {
     }
 
 
+    private final static String FIRE_CUTIN_OFFSET_MSEC ="FIRE_CUTIN_OFFSET_MSEC";
+
+    public int getFireCutinOffsetSec() {
+        return mPrefs.getInt(FIRE_CUTIN_OFFSET_MSEC, 1000) / 1000;
+    }
+
+    public void saveFireCutinOffsetSec(int sec) {
+        mPrefs.edit().putInt(FIRE_CUTIN_OFFSET_MSEC, sec * 1000).apply();
+    }
+
+
 
 }
