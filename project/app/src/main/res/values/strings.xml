@@ -21,6 +21,7 @@
 
     <!-- unit -->
     <string name="x_seconds_later">%1$d sec later</string>
+    <string name="plus_x_seconds_later">+ %1$d sec later</string>
 
 
 </resources>

@@ -20,7 +20,8 @@
     <string name="video_list_x">動画一覧(%1$d)</string>
 
     <!-- unit -->
-    <string name="x_seconds_later">%1$d秒後</string>
+    <string name="x_seconds_later">%1$d 秒後</string>
+    <string name="plus_x_seconds_later">+ %1$d 秒後</string>
 
 
 
