@@ -29,7 +29,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
-        versionName "0.9.0"
+        versionName "0.9.1"
         manifestPlaceholders = [fabricApiKey:"${getFabricApiKey()}"]
     }
 
