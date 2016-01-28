@@ -15,8 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import com.garlicg.screenrecordct.util.Toaster;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
 public class SettingsActivity extends AppCompatActivity
@@ -41,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // launchButton
-        View launchButton = ViewFinder.byId(this, R.id.startChatHead);
+        View launchButton = ViewFinder.byId(this, R.id.startFloating);
         launchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +53,17 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        // video size
+        createVideoSize(savedInstanceState, prefs);
+        createFireCutin(savedInstanceState, prefs);
+        createAutoStop(savedInstanceState, prefs);
+        createTriggerTitle(savedInstanceState , prefs);
+        createTriggerMessage(savedInstanceState , prefs);
+        createInvisibleRecord(savedInstanceState, prefs);
+        createVideoList(savedInstanceState , prefs);
+    }
+
+
+    private void createVideoSize(Bundle savedInstanceState , AppPrefs prefs){
         int vp = prefs.getVideoPercentage();
         final VideoPercentage[] spinnerItems = AppPrefs.videoPercentages();
         int spinnerSelection = AppPrefs.findVideoPercentagePosition(spinnerItems, vp);
@@ -64,26 +78,89 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void run() {
                 // setSelection later
-                spinner.setOnItemSelectedListener(mVideoSizeSelected);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (view == null) return;
+
+                        VideoPercentage item = (VideoPercentage) parent.getItemAtPosition(position);
+                        new AppPrefs(view.getContext()).saveVideoPercentage(item);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
             }
         });
     }
 
 
-    private AdapterView.OnItemSelectedListener mVideoSizeSelected = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            if (view == null) return;
+    private void createFireCutin(Bundle savedInstanceState , AppPrefs prefs){
+        TextView valueView = ViewFinder.byId(this , R.id.fireCutinValue);
+        valueView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+    }
 
-            VideoPercentage item = (VideoPercentage) parent.getItemAtPosition(position);
-            new AppPrefs(SettingsActivity.this).saveVideoPercentage(item);
-        }
 
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            // none
-        }
-    };
+    private void createAutoStop(Bundle savedInstanceState , AppPrefs prefs){
+        TextView valueView = ViewFinder.byId(this , R.id.autoStopValue);
+        valueView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+    }
+
+
+    private void createTriggerTitle(Bundle savedInstanceState , AppPrefs prefs){
+        TextView valueView = ViewFinder.byId(this , R.id.triggerTitleValue);
+        valueView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+    }
+
+
+    private void createTriggerMessage(Bundle savedInstanceState , AppPrefs prefs){
+        TextView valueView = ViewFinder.byId(this , R.id.triggerMessageValue);
+        valueView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+    }
+
+
+    private void createInvisibleRecord(Bundle savedInstanceState , AppPrefs prefs){
+        Switch sw = ViewFinder.byId(this , R.id.invisibleRecord);
+        sw.setChecked(false);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // TODO
+            }
+        });
+    }
+
+
+    private void createVideoList(Bundle savedInstanceState , AppPrefs prefs){
+        View view = ViewFinder.byId(this , R.id.videoList);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+    }
 
 
     /**

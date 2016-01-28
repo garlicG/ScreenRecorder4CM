@@ -1,9 +1,26 @@
 <resources>
-    <string name="app_name">スクリーンレコーダー</string>
-    <string name="settings">設定</string>
-    <string name="video_size">ビデオサイズ</string>
-    <string name="cutin_start_offset">録画開始後のカットイン表示タイミング</string>
-    <string name="record_button_invisible">撮影中は録画ボタンを非表示にする</string>
+    <string name="app_name">Screen Recorder for CUT-IN Manager</string>
+    <string name="app_simple_name">Screen Recorder</string>
+
+    <!-- general word -->
+    <string name="launch">Launch</string>
+    <string name="settings">Settings</string>
+    <string name="video_list">Video list</string>
+
+    <!-- setting specific -->
+    <string name="video_size">Video size</string>
+    <string name="fire_cutin">Fire CUT-IN</string>
+    <string name="auto_stop">Auto stop</string>
+    <string name="no_seconds_only_manual_stop">0 sec later\n(Manual stop only)</string>
+    <string name="trigger_title">Trigger title</string>
+    <string name="trigger_title_default">SCREEN RECORD</string>
+    <string name="trigger_message">Trigger message</string>
+    <string name="trigger_message_default">Start video recording</string>
+    <string name="record_button_invisible">Transparency button recording</string>
+    <string name="video_list_x">Video list (%1$d)</string>
+
+    <!-- unit -->
+    <string name="x_seconds_later">%1$d sec later</string>
 
 
 </resources>

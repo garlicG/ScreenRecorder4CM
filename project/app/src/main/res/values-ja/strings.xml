@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">スクリーンレコーダー for カットインマネージャー</string>
+    <string name="app_simple_name">スクリーンレコーダー</string>
+
+    <!-- general word -->
+    <string name="launch">起動</string>
+    <string name="settings">設定</string>
+    <string name="video_list">動画一覧</string>
+
+    <!-- setting specific -->
+    <string name="video_size">ビデオサイズ</string>
+    <string name="fire_cutin">カットイン表示</string>
+    <string name="auto_stop">自動停止</string>
+    <string name="no_seconds_only_manual_stop">0秒後\n(手動停止のみ)</string>
+    <string name="trigger_title">トリガータイトル</string>
+    <string name="trigger_title_default">SCREEN RECORD</string>
+    <string name="trigger_message">トリガーメッセージ</string>
+    <string name="trigger_message_default">Start video recording</string>
+    <string name="record_button_invisible">録画中のボタン透明化</string>
+    <string name="video_list_x">動画一覧(%1$d)</string>
+
+    <!-- unit -->
+    <string name="x_seconds_later">%1$d秒後</string>
+
+
+
+</resources>
