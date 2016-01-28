@@ -1,7 +1,9 @@
 package com.garlicg.screenrecordct.util;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.garlicg.screenrecordct.BuildConfig;
 
 /**
@@ -55,4 +57,27 @@ public class Cat {
         Log.i("[Tack]" + sTimeStampTag, createMessage("[" + Long.toString(diffTime) + "ms]" + message));
         sTmpTime = currentTime;
     }
+
+
+    public static void sendE(Throwable e , @NonNull String msg) {
+        sendE(msg + " (" + e.toString() + ")");
+    }
+
+    public static void sendE(@NonNull String msg) {
+        if(BuildConfig.DEBUG){
+            Log.e(TAG_NAME, createMessage(msg));
+        }
+
+        if (BuildConfig.USE_CRASHLYTICS){
+            Crashlytics.logException(new MessageException(msg));
+        }
+    }
+
+    public static class MessageException extends java.lang.Exception{
+
+        public MessageException(String detail){
+            super(detail);
+        }
+    }
+
 }
