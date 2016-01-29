@@ -86,4 +86,16 @@ public class AppPrefs {
     }
 
 
+    private final static String INVISIBLE_RECORD = "INVISIBLE_RECORD";
+
+    public boolean getInvisibleRecord() {
+        return mPrefs.getBoolean(INVISIBLE_RECORD, false);
+    }
+
+    public void saveInvisibleRecord(boolean value) {
+        mPrefs.edit().putBoolean(INVISIBLE_RECORD, value).apply();
+    }
+
+
+
 }

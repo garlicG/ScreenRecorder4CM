@@ -247,12 +247,13 @@ public class SettingsActivity extends AppCompatActivity
      * InvisibleRecord
      */
     private void createInvisibleRecord(Bundle savedInstanceState) {
-        Switch sw = ViewFinder.byId(this, R.id.invisibleRecord);
-        sw.setChecked(false);
+        boolean value = mPrefs.getInvisibleRecord();
+        final Switch sw = ViewFinder.byId(this, R.id.invisibleRecord);
+        sw.setChecked(value);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // TODO
+                mPrefs.saveInvisibleRecord(isChecked);
             }
         });
     }
