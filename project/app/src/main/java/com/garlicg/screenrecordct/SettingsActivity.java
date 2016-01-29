@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -180,11 +181,30 @@ public class SettingsActivity extends AppCompatActivity
      * TriggerTitle
      */
     private void createTriggerTitle(Bundle savedInstanceState) {
-        TextView valueView = ViewFinder.byId(this, R.id.triggerTitleValue);
+        final TextView valueView = ViewFinder.byId(this, R.id.triggerTitleValue);
+        String value = mPrefs.getTriggerTitle();
+        valueView.setText(value);
+
+        // handle value from dialog callback
+        final ValidateTextDialogBuilder.Callback callback = new ValidateTextDialogBuilder.Callback() {
+            @Override
+            public boolean onValidate(CharSequence value) {
+                return !TextUtils.isEmpty(value);
+            }
+            @Override
+            public void onOk(CharSequence value) {
+                valueView.setText(value);
+                mPrefs.saveTriggerTitle(value.toString());
+            }
+        };
+
+        // show dialog on click
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                String value = mPrefs.getTriggerTitle();
+                AlertDialog ad = ValidateTextDialogBuilder.build(v.getContext(), value, null, 30, callback);
+                ad.show();
             }
         });
     }

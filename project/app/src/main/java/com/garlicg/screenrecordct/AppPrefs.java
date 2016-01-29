@@ -64,7 +64,15 @@ public class AppPrefs {
     }
 
 
+    private final static String TRIGGER_TITLE = "TRIGGER_TITLE";
 
+    public String getTriggerTitle() {
+        return mPrefs.getString(TRIGGER_TITLE, mContext.getString(R.string.trigger_title_default));
+    }
+
+    public void saveTriggerTitle(String value) {
+        mPrefs.edit().putString(TRIGGER_TITLE, value).apply();
+    }
 
 
 }
