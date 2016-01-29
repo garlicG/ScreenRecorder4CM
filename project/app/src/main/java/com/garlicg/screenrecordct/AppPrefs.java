@@ -75,4 +75,15 @@ public class AppPrefs {
     }
 
 
+    private final static String TRIGGER_MESSAGE = "TRIGGER_MESSAGE";
+
+    public String getTriggerMessage() {
+        return mPrefs.getString(TRIGGER_MESSAGE, mContext.getString(R.string.trigger_message_default));
+    }
+
+    public void saveTriggerMessage(String value) {
+        mPrefs.edit().putString(TRIGGER_MESSAGE, value).apply();
+    }
+
+
 }

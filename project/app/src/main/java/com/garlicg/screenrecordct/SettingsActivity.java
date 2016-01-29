@@ -203,7 +203,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 String value = mPrefs.getTriggerTitle();
-                AlertDialog ad = ValidateTextDialogBuilder.build(v.getContext(), value, null, 30, callback);
+                AlertDialog ad = ValidateTextDialogBuilder.build(v.getContext(), value, null, 50, callback);
                 ad.show();
             }
         });
@@ -214,11 +214,30 @@ public class SettingsActivity extends AppCompatActivity
      * TriggerMessage
      */
     private void createTriggerMessage(Bundle savedInstanceState) {
-        TextView valueView = ViewFinder.byId(this, R.id.triggerMessageValue);
+        final TextView valueView = ViewFinder.byId(this, R.id.triggerMessageValue);
+        String value = mPrefs.getTriggerMessage();
+        valueView.setText(value);
+
+        // handle value from dialog callback
+        final ValidateTextDialogBuilder.Callback callback = new ValidateTextDialogBuilder.Callback() {
+            @Override
+            public boolean onValidate(CharSequence value) {
+                return !TextUtils.isEmpty(value);
+            }
+            @Override
+            public void onOk(CharSequence value) {
+                valueView.setText(value);
+                mPrefs.saveTriggerMessage(value.toString());
+            }
+        };
+
+        // show dialog on click
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                String value = mPrefs.getTriggerMessage();
+                AlertDialog ad = ValidateTextDialogBuilder.build(v.getContext(), value, null, 100, callback);
+                ad.show();
             }
         });
     }
