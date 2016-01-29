@@ -41,6 +41,12 @@
             </intent-filter>
         </activity-alias>
 
+
+        <activity
+            android:name=".VideoListActivity"
+            android:label="@string/video_list"
+            android:theme="@style/DarkTheme"/>
+
         <service
             android:name=".RecordService"
             android:exported="false"

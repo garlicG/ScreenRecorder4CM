@@ -253,9 +253,9 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/videoListTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:padding="8dp"
                     android:text="@string/video_list_x"
                     android:textColor="?android:attr/textColorPrimary"

@@ -17,7 +17,7 @@
     <string name="trigger_message">トリガーメッセージ</string>
     <string name="trigger_message_default">Start video recording</string>
     <string name="record_button_invisible">録画中のボタン透明化</string>
-    <string name="video_list_x">動画一覧(%1$d)</string>
+    <string name="video_list_x">動画一覧 (%1$d)</string>
 
     <!-- unit -->
     <string name="x_seconds_later">%1$d 秒後</string>

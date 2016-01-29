@@ -64,6 +64,13 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        invalidateVideoCount();
+    }
+
+
     /**
      * Create video size setting view
      */
@@ -263,13 +270,25 @@ public class SettingsActivity extends AppCompatActivity
      * VideoList
      */
     private void createVideoList(Bundle savedInstanceState) {
-        View view = ViewFinder.byId(this, R.id.videoList);
-        view.setOnClickListener(new View.OnClickListener() {
+        View touchFrame = ViewFinder.byId(this, R.id.videoList);
+        touchFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                Intent intent = new Intent(SettingsActivity.this, VideoListActivity.class);
+                startActivity(intent);
             }
         });
+
+        // init count
+        TextView titleView = ViewFinder.byId(this , R.id.videoListTitle);
+        titleView.setText(getString(R.string.video_list_x , 0));
+    }
+
+    private void invalidateVideoCount(){
+        // TODO 動画数を非同期で取得する
+        int videoNum = 9;
+        TextView titleView = ViewFinder.byId(this , R.id.videoListTitle);
+        titleView.setText(getString(R.string.video_list_x , videoNum));
     }
 
 
