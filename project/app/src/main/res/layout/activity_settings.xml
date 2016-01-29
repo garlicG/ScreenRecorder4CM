@@ -114,6 +114,7 @@
                     android:id="@+id/autoStopValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="end"
                     android:paddingBottom="8dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"

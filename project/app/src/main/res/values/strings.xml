@@ -11,7 +11,7 @@
     <string name="video_size">Video size</string>
     <string name="fire_cutin">Fire CUT-IN</string>
     <string name="auto_stop">Auto stop</string>
-    <string name="no_seconds_only_manual_stop">0 sec later\n(Manual stop only)</string>
+    <string name="no_seconds_only_manual_stop">+ 0 sec later\n(Manual stop)</string>
     <string name="trigger_title">Trigger title</string>
     <string name="trigger_title_default">SCREEN RECORD</string>
     <string name="trigger_message">Trigger message</string>

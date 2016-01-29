@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -63,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity
 
 
     /**
-     * VideoSize
+     * Create video size setting view
      */
     private void createVideoSize(Bundle savedInstanceState) {
         int vp = mPrefs.getVideoPercentage();
@@ -98,23 +99,17 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
-    private TextView mFireCutinValueView;
-
     /**
-     * FireCutin
+     * Create auto stop setting view
      */
-    private void createFireCutin(Bundle savedInstanceState) {
-        mFireCutinValueView = ViewFinder.byId(this, R.id.fireCutinValue);
-        mFireCutinValueView.setText(getString(R.string.x_seconds_later, mPrefs.getFireCutinOffsetSec()));
-        mFireCutinValueView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFireCutinDialog();
-            }
-        });
-    }
+    private void createFireCutin(Bundle savedInstanceState){
 
-    void showFireCutinDialog() {
+        // init value setup
+        final TextView valueView = ViewFinder.byId(this, R.id.fireCutinValue);
+        int value = mPrefs.getFireCutinOffsetSec();
+        valueView.setText(getString(R.string.x_seconds_later, value));
+
+        // handle value from dialog callback
         final ValidateIntDialogBuilder.Callback callback = new ValidateIntDialogBuilder.Callback() {
             @Override
             public boolean onValidate(int value) {
@@ -122,23 +117,60 @@ public class SettingsActivity extends AppCompatActivity
             }
             @Override
             public void onOk(int value) {
-                mFireCutinValueView.setText(getString(R.string.x_seconds_later, value));
+                valueView.setText(getString(R.string.x_seconds_later, value));
                 mPrefs.saveFireCutinOffsetSec(value);
             }
         };
-        ValidateIntDialogBuilder.build(this
-                , mPrefs.getFireCutinOffsetSec()
-                , null
-                , callback
-        ).show();
-    }
 
-    private void createAutoStop(Bundle savedInstanceState){
-        TextView valueView = ViewFinder.byId(this , R.id.autoStopValue);
+        // show dialog on click
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                int value = mPrefs.getFireCutinOffsetSec();
+                AlertDialog ad = ValidateIntDialogBuilder.build(v.getContext(), value, null, callback);
+                ad.show();
+            }
+        });
+    }
+
+
+    /**
+     * Create auto stop setting view
+     */
+    private void createAutoStop(Bundle savedInstanceState){
+
+        // init value setup
+        final TextView valueView = ViewFinder.byId(this, R.id.autoStopValue);
+        int value = mPrefs.getAutoStopSec();
+        valueView.setText(value == 0
+                 ? getString(R.string.no_seconds_only_manual_stop)
+                 : getString(R.string.plus_x_seconds_later, value)
+        );
+
+        // handle value from dialog callback
+        final ValidateIntDialogBuilder.Callback callback = new ValidateIntDialogBuilder.Callback() {
+            @Override
+            public boolean onValidate(int value) {
+                return value >= 0 && value <= 999;
+            }
+            @Override
+            public void onOk(int value) {
+                valueView.setText(value == 0
+                        ? getString(R.string.no_seconds_only_manual_stop)
+                        : getString(R.string.plus_x_seconds_later, value)
+                );
+
+                mPrefs.saveAutoStopSec(value);
+            }
+        };
+
+        // show dialog on click
+        valueView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int value = mPrefs.getAutoStopSec();
+                AlertDialog ad = ValidateIntDialogBuilder.build(v.getContext(), value, null, callback);
+                ad.show();
             }
         });
     }

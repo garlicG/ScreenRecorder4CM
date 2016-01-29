@@ -53,4 +53,18 @@ public class AppPrefs {
 
 
 
+    private final static String AUTO_STOP_MSEC ="AUTO_STOP_MSEC";
+
+    public int getAutoStopSec() {
+        return mPrefs.getInt(AUTO_STOP_MSEC, 1000) / 1000;
+    }
+
+    public void saveAutoStopSec(int sec) {
+        mPrefs.edit().putInt(AUTO_STOP_MSEC, sec * 1000).apply();
+    }
+
+
+
+
+
 }

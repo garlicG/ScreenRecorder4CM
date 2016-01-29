@@ -11,7 +11,7 @@
     <string name="video_size">ビデオサイズ</string>
     <string name="fire_cutin">カットイン表示</string>
     <string name="auto_stop">自動停止</string>
-    <string name="no_seconds_only_manual_stop">0秒後\n(手動停止のみ)</string>
+    <string name="no_seconds_only_manual_stop">+ 0秒後\n(手動停止)</string>
     <string name="trigger_title">トリガータイトル</string>
     <string name="trigger_title_default">SCREEN RECORD</string>
     <string name="trigger_message">トリガーメッセージ</string>

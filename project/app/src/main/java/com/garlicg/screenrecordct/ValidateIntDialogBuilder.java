@@ -36,8 +36,7 @@ public class ValidateIntDialogBuilder {
         editText.setFilters(new InputFilter[]{lengthFilter});
 
         int dp16 = DisplayUtils.dpToPx(context.getResources(), 16);
-        int dp12 = DisplayUtils.dpToPx(context.getResources(), 12);
-        ab.setView(editText, dp12, dp16, dp12, 0);
+        ab.setView(editText, dp16, dp16, dp16, 0);
 
         ab.setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
