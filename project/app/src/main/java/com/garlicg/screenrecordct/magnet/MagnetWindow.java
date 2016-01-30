@@ -109,13 +109,7 @@ public class MagnetWindow extends FrameLayout{
             ScaleAnimation scale = new ScaleAnimation(0f, 1f, 0f, 1f , w/2 , h/2);
             scale.setDuration(300);
             scale.setInterpolator(new DecelerateInterpolator());
-            RotateAnimation rotate = new RotateAnimation(-180 , 0 , w/2 , h/2);
-            rotate.setDuration(300);
-            rotate.setInterpolator(new DecelerateInterpolator());
-            AnimationSet set = new AnimationSet(false);
-            set.addAnimation(scale);
-            set.addAnimation(rotate);
-            mView.startAnimation(set);
+            mView.startAnimation(scale);
         }
     }
 
@@ -130,14 +124,21 @@ public class MagnetWindow extends FrameLayout{
     }
 
 
-    public ImageView getMagnetImage(){
-        return (ImageView) findViewById(R.id.magnetImage);
+    public ImageView getMagnetFrame(){
+        return (ImageView) findViewById(R.id.innerFrame);
+    }
+
+
+    public ImageView getMagnetIcon(){
+        return (ImageView)findViewById(R.id.magnetIcon);
     }
 
 
     public TextView getMagnetText(){
         return (TextView) findViewById(R.id.magnetText);
     }
+
+
 
 
 

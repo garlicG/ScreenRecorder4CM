@@ -86,7 +86,8 @@ public class FloatingManager implements MagnetWindow.Listener {
         mState = STATE_CONTROLLABLE;
         mVibrator.vibrate(800);
         mMagnet.getView().setEnabled(true);
-        mMagnet.getMagnetImage().setColorFilter(0xffffffff);
+        mMagnet.getMagnetFrame().setColorFilter(null);
+        mMagnet.getMagnetIcon().setVisibility(View.VISIBLE);
         mRotate2.cancel();
     }
 
@@ -115,16 +116,17 @@ public class FloatingManager implements MagnetWindow.Listener {
             View v = window.getView();
             v.setEnabled(false);
             v.setActivated(false);
-            ImageView image = window.getMagnetImage();
-            image.setColorFilter(0xff333333);
+            ImageView frame = window.getMagnetFrame();
+            frame.setColorFilter(0xffffffff);
             mRotate1.cancel();
-            mRotate2 = genRotateAnimation(image , 6000);
+            mRotate2 = genRotateAnimation(frame , 6000);
             mRotate2.start();
         }
     }
 
 
     private void startCountDown(){
+        mMagnet.getMagnetIcon().setVisibility(View.INVISIBLE);
         mMagnet.getMagnetText().setText("3");
         mHandler.postDelayed(mCountDown2, 1000);
         mHandler.postDelayed(mCountDown1, 2000);
@@ -133,6 +135,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     private void cancelCountDown(){
+        mMagnet.getMagnetIcon().setVisibility(View.VISIBLE);
         mMagnet.getMagnetText().setText("");
         mHandler.removeCallbacks(mCountDown2);
         mHandler.removeCallbacks(mCountDown1);
@@ -167,7 +170,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
             mMagnet.getMagnetText().setText("");
 
-            ImageView image = mMagnet.getMagnetImage();
+            ImageView image = mMagnet.getMagnetFrame();
             image.setColorFilter(0xffff0000);
             image.setRotation(image.getRotation() % 360);
             mRotate1 = genRotateAnimation(image, 2000);

@@ -7,24 +7,32 @@
         android:id="@+id/viewRoot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/circle_button_white"
+        android:background="@drawable/record_button"
         android:duplicateParentState="true"
         android:padding="3dp">
 
         <ImageView
-            android:id="@+id/magnetImage"
+            android:id="@+id/innerFrame"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/circle_inner_frame"
+            android:background="@drawable/record_button_inner_frame"
             android:duplicateParentState="true"
-            android:src="@drawable/circle_inner_circle" />
+            android:src="@drawable/record_button_inner_cover" />
+
+        <ImageView
+            android:id="@+id/magnetIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="center"
+            android:tintMode="src_in"
+            android:src="@drawable/ic_action_record" />
 
         <TextView
             android:id="@+id/magnetText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="#f00"
+            android:textColor="#fff"
             android:textSize="16dp" />
     </FrameLayout>
 

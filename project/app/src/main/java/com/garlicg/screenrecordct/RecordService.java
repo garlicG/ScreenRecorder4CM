@@ -124,7 +124,12 @@ public class RecordService extends Service implements FloatingManager.Listener ,
 
     @Override
     public void onClickStartRecord() {
-        mRecordHelper.startRecord(mIntent);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mRecordHelper.startRecord(mIntent);
+            }
+        });
     }
 
 

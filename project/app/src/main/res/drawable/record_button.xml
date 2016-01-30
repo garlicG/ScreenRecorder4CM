@@ -14,7 +14,7 @@
             </item>
             <item>
                 <shape android:shape="oval">
-                    <solid android:color="#000" />
+                    <solid android:color="@color/appRed" />
                 </shape>
             </item>
         </ripple>

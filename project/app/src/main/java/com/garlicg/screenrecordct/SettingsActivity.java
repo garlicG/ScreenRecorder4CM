@@ -281,14 +281,14 @@ public class SettingsActivity extends AppCompatActivity
 
         // init count
         TextView titleView = ViewFinder.byId(this , R.id.videoListTitle);
-        titleView.setText(getString(R.string.video_list_x , 0));
+        titleView.setText(getString(R.string.video_list_x, 0));
     }
 
     private void invalidateVideoCount(){
         // TODO 動画数を非同期で取得する
         int videoNum = 9;
         TextView titleView = ViewFinder.byId(this , R.id.videoListTitle);
-        titleView.setText(getString(R.string.video_list_x , videoNum));
+        titleView.setText(getString(R.string.video_list_x, videoNum));
     }
 
 
