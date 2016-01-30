@@ -15,7 +15,7 @@ import android.widget.ImageView;
 
 import com.garlicg.screenrecordct.magnet.DecorDummy;
 import com.garlicg.screenrecordct.magnet.MagnetWindow;
-import com.garlicg.screenrecordct.magnet.TrashWindow;
+import com.garlicg.screenrecordct.magnet.IndicatorWindow;
 
 /**
  */
@@ -25,7 +25,7 @@ public class FloatingManager implements MagnetWindow.Listener {
     private final Vibrator mVibrator;
     private final WindowManager mWindowManager;
     private MagnetWindow mMagnet;
-    private TrashWindow mTrash;
+    private IndicatorWindow mTrash;
     private DecorDummy mDecorDummy;
     private Listener mListener;
     private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -41,9 +41,10 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     public interface Listener{
-        void onClickStartRecord();
-        void onClickStopRecord();
-        void onHitFinishFloating();
+        void onRequestStartRecord();
+        void onRequestStopRecord();
+        boolean onHandleTrashDrop();
+        boolean onHandleSettingsDrop();
     }
 
 
@@ -59,8 +60,8 @@ public class FloatingManager implements MagnetWindow.Listener {
         mDecorDummy = DecorDummy.createInstance(mContext);
         mWindowManager.addView(mDecorDummy, DecorDummy.createWindowParams());
 
-        mTrash = TrashWindow.createInstance(mContext);
-        mWindowManager.addView(mTrash, TrashWindow.createWindowParams(mContext));
+        mTrash = IndicatorWindow.createInstance(mContext);
+        mWindowManager.addView(mTrash, IndicatorWindow.createWindowParams(mContext));
 
         mMagnet = MagnetWindow.createInstance(mContext);
         mMagnet.setDecorDummy(mDecorDummy);
@@ -110,7 +111,7 @@ public class FloatingManager implements MagnetWindow.Listener {
         else if(mState == STATE_RECORDING){
             mState = STATE_STOPPING;
             mVibrator.vibrate(15);
-            mListener.onClickStopRecord();
+            mListener.onRequestStopRecord();
 
             ImageView frame = window.getMagnetFrame();
             frame.setColorFilter(0xffffffff);
@@ -159,7 +160,7 @@ public class FloatingManager implements MagnetWindow.Listener {
         @Override
         public void run() {
             mState = STATE_RECORDING;
-            mListener.onClickStartRecord();
+            mListener.onRequestStartRecord();
 
             View v = mMagnet.getView();
             v.setActivated(true);
@@ -187,8 +188,16 @@ public class FloatingManager implements MagnetWindow.Listener {
     public void onDragging(MagnetWindow window, Point decor, PointF touchPoint) {
         if(mState != STATE_CONTROLLABLE) return;
 
-        boolean isHit = mTrash.isHit(decor, touchPoint);
-        mTrash.setScaleUp(isHit);
+        if(mTrash.isHitTrash(decor , touchPoint)){
+            mTrash.requestScaleUpTrash();
+        }
+        else if(mTrash.isHitSettings(decor , touchPoint)){
+            mTrash.requestScaleUpSettings();
+        }
+        else{
+            mTrash.requestScaleUpCancel();
+        }
+
     }
 
 
@@ -196,20 +205,29 @@ public class FloatingManager implements MagnetWindow.Listener {
     public boolean onDrop(MagnetWindow window, Point decor, PointF touchPoint) {
         if(mState != STATE_CONTROLLABLE) return false;
 
-        if(mTrash.isHit(decor, touchPoint)){
-            mTrash.disappear(200);
-            mMagnet.disappear(200);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mListener.onHitFinishFloating();
-                }
-            },200);
+        if(mTrash.isHitTrash(decor, touchPoint) && mListener.onHandleTrashDrop()){
+            return true;
+        }
+        else if(mTrash.isHitSettings(decor , touchPoint) && mListener.onHandleSettingsDrop()){
             return true;
         }
 
         mTrash.hide();
         return false;
+    }
+
+
+    public void dismissAsHitTrash(long duration){
+        mTrash.disappearHitAnimate(mTrash.getTrash() , duration);
+        mTrash.disappearNoHitAnimate(mTrash.getSettings() ,duration);
+        mMagnet.disappear(200);
+    }
+
+
+    public void dismissAsHitSettings(long duration){
+        mTrash.disappearHitAnimate(mTrash.getSettings(), duration);
+        mTrash.disappearNoHitAnimate(mTrash.getTrash(), duration);
+        mMagnet.disappear(duration);
     }
 
 

@@ -123,7 +123,7 @@ public class RecordService extends Service implements FloatingManager.Listener ,
 
 
     @Override
-    public void onClickStartRecord() {
+    public void onRequestStartRecord() {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -134,15 +134,42 @@ public class RecordService extends Service implements FloatingManager.Listener ,
 
 
     @Override
-    public void onClickStopRecord() {
+    public void onRequestStopRecord() {
         mRecordHelper.stopRecording();
     }
 
 
     @Override
-    public void onHitFinishFloating() {
-        // TODO return boolean
-        stopSelf();
+    public boolean onHandleTrashDrop() {
+        if(mRecordHelper.isRunning()) return false;
+
+        mFloatingManager.dismissAsHitTrash(200);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopSelf();
+            }
+        },200);
+        return true;
+    }
+
+
+    @Override
+    public boolean onHandleSettingsDrop() {
+        if(mRecordHelper.isRunning()) return false;
+
+        mFloatingManager.dismissAsHitSettings(200);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(RecordService.this , SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                stopSelf();
+            }
+        }, 200);
+        return true;
+
     }
 
 
