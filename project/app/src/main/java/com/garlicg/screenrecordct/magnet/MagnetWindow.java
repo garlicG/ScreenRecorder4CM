@@ -62,9 +62,11 @@ public class MagnetWindow extends FrameLayout{
     VelocityTracker mVelocityTracker = null;
     private int mMaxVelocity;
     private int mSlop;
+    private int mTapTimeout;
     private DecorDummy mDecorDummy;
     private float mInitialTouchX;
     private float mInitialTouchY;
+    private long mInitialTapTime;
 
 
 
@@ -83,7 +85,8 @@ public class MagnetWindow extends FrameLayout{
     public void init(Context context){
         mWindowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         mSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-        ViewConfiguration.getTapTimeout();
+//        mTapTimeout = ViewConfiguration.getTapTimeout(); // bit long time...
+        mTapTimeout = 60;
         mMaxVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
     }
 
@@ -234,9 +237,11 @@ public class MagnetWindow extends FrameLayout{
 
         if (action == MotionEvent.ACTION_DOWN) {
             updateWindowSize();
+
             final PointF touchPoint = getTouchPoint(event);
             mInitialTouchX = touchPoint.x;
             mInitialTouchY = touchPoint.y;
+            mInitialTapTime = System.currentTimeMillis();
             mMoving = false;
             return true;
         }
@@ -265,40 +270,56 @@ public class MagnetWindow extends FrameLayout{
         else if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
             final PointF touchPoint = getTouchPoint(event);
 
+            // クリックで終了 (動きなし)
             if(!mMoving){
                 mListener.onClick(this);
+                return false;
             }
-            else{
-                mVelocityTracker.computeCurrentVelocity(50, mMaxVelocity);
+            // クリックで終了 (動いたけどすぐ離した)
+            else if(mInitialTapTime + mTapTimeout >= System.currentTimeMillis()){
+                mListener.onClick(this);
+                wallOn(touchPoint);
+                mVelocityTracker.recycle();
+                mVelocityTracker = null;
+                return false;
+            }
 
-                // おしまい
-                if(mListener.onDrop(this, mDecorSizeCache, touchPoint)){
-                    // none
-                }
-                // 継続
-                else {
-                    // BubbleのX位置をこのViewの右端か左端に調整する
-                    float toX = touchPoint.x + mVelocityTracker.getXVelocity() < getParentWidth() / 2 ?
-                            0 :
-                            getParentWidth() - getWidth();
-
-                    // BubbleのY位置をこのViewの範囲内に調整する
-                    final int height = getHeight();
-                    float toY = (touchPoint.y - height / 2) + mVelocityTracker.getYVelocity();
-                    toY = Math.max(0, toY);
-                    toY = Math.min(getParentHeight() - height, toY);
-
-                    // アニメで動かす
-                    locateAnimation(toX, toY);
-                }
-
+            // リスナー側のドロップハンドリング
+            if(mListener.onDrop(this, mDecorSizeCache, touchPoint)){
                 mVelocityTracker.recycle();
                 mVelocityTracker = null;
             }
-
+            // 右が左にWindowを移動する
+            else {
+                wallOn(touchPoint);
+                mVelocityTracker.recycle();
+                mVelocityTracker = null;
+            }
+            return false;
         }
 
         return false;
+    }
+
+
+    /**
+     * 壁に吸い付くアニメーション
+     */
+    private void wallOn(PointF touchPoint){
+        mVelocityTracker.computeCurrentVelocity(50, mMaxVelocity);
+        // X位置をこのParentの右端か左端に調整する
+        float toX = touchPoint.x + mVelocityTracker.getXVelocity() < getParentWidth() / 2 ?
+                0 :
+                getParentWidth() - getWidth();
+
+        // Y位置をこのParentの範囲内に調整する
+        final int height = getHeight();
+        float toY = (touchPoint.y - height / 2) + mVelocityTracker.getYVelocity();
+        toY = Math.max(0, toY);
+        toY = Math.min(getParentHeight() - height, toY);
+
+        // アニメで動かす
+        locateAnimation(toX, toY);
     }
 
 
