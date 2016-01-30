@@ -85,7 +85,6 @@ public class FloatingManager implements MagnetWindow.Listener {
     public void initState(){
         mState = STATE_CONTROLLABLE;
         mVibrator.vibrate(800);
-        mMagnet.getView().setEnabled(true);
         mMagnet.getMagnetFrame().setColorFilter(null);
         mMagnet.getMagnetIcon().setVisibility(View.VISIBLE);
         mRotate2.cancel();
@@ -113,9 +112,6 @@ public class FloatingManager implements MagnetWindow.Listener {
             mVibrator.vibrate(15);
             mListener.onClickStopRecord();
 
-            View v = window.getView();
-            v.setEnabled(false);
-            v.setActivated(false);
             ImageView frame = window.getMagnetFrame();
             frame.setColorFilter(0xffffffff);
             mRotate1.cancel();

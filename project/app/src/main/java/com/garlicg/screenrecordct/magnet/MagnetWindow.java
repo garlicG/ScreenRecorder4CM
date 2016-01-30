@@ -172,7 +172,6 @@ public class MagnetWindow extends FrameLayout{
 
 
     private PointF getTouchPoint(MotionEvent event){
-//        Timber.i("rawY:" + event.getRawY());
         mTouchPointCache.x = event.getRawX();
         mTouchPointCache.y = event.getRawY() - mTouchYDiff;
         return mTouchPointCache;
