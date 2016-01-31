@@ -76,6 +76,8 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     public void onDestroy() {
+        mHandler.removeCallbacks(mOKDismiss);
+
         mWindowManager.removeView(mMagnet);
         mMagnet = null;
 
@@ -96,8 +98,9 @@ public class FloatingManager implements MagnetWindow.Listener {
         mState = STATE_CONTROLLABLE;
         mVibrator.vibrate(800);
         mMagnet.getMagnetFrame().setColorFilter(null);
-        mMagnet.getMagnetIcon().setVisibility(View.VISIBLE);
         mRotate2.cancel();
+        mMagnet.getMagnetText().setText("OK");
+        mHandler.postDelayed(mOKDismiss, 1000);
     }
 
 
@@ -119,7 +122,7 @@ public class FloatingManager implements MagnetWindow.Listener {
                 mRotate1.cancel();
             }
         }
-        mRotate2 = genRotateAnimation(frame , 6000);
+        mRotate2 = genRotateAnimation(frame , 1000);
         mRotate2.start();
     }
 
@@ -149,6 +152,7 @@ public class FloatingManager implements MagnetWindow.Listener {
 
 
     private void startCountDown(){
+        mHandler.removeCallbacks(mOKDismiss);
         mMagnet.getMagnetIcon().setVisibility(View.INVISIBLE);
         mMagnet.getMagnetText().setText("3");
         mHandler.postDelayed(mCountDown2, 1000);
@@ -201,6 +205,15 @@ public class FloatingManager implements MagnetWindow.Listener {
             }
 
             mListener.onRequestStartRecord();
+        }
+    };
+
+
+    private Runnable mOKDismiss = new Runnable() {
+        @Override
+        public void run() {
+            mMagnet.getMagnetText().setText("");
+            mMagnet.getMagnetIcon().setVisibility(View.VISIBLE);
         }
     };
 
