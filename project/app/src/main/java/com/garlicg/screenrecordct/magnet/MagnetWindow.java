@@ -214,6 +214,7 @@ public class MagnetWindow extends FrameLayout{
 
     private boolean mQuiting = false;
     private boolean mMoving = false;
+    private boolean mMoveEnable = true;
 
 
     public void disappear(long duration){
@@ -223,6 +224,11 @@ public class MagnetWindow extends FrameLayout{
         scale.setInterpolator(Interpolators.ACCELERATE);
         scale.setDuration(duration);
         mView.startAnimation(scale);
+    }
+
+
+    public void lockPosition(boolean lock){
+        mMoveEnable = !lock;
     }
 
 
@@ -260,8 +266,11 @@ public class MagnetWindow extends FrameLayout{
             else{
                  float toX = touchPoint.x - getWidth() /2;
                  float toY = touchPoint.y - getHeight()/2;
-                 locate(toX, toY);
-                 mListener.onDragging(this, mDecorSizeCache, touchPoint);
+
+                 if(mMoveEnable){
+                     locate(toX, toY);
+                     mListener.onDragging(this, mDecorSizeCache, touchPoint);
+                 }
 
                  event.offsetLocation(toX, toY);
                  mVelocityTracker.addMovement(event);
@@ -282,7 +291,7 @@ public class MagnetWindow extends FrameLayout{
                 // none
             }
             // 右が左にWindowを移動する
-            else {
+            else if(mMoveEnable){
                 wallOn(touchPoint);
             }
 

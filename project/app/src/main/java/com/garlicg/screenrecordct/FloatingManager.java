@@ -126,12 +126,16 @@ public class FloatingManager implements MagnetWindow.Listener {
             mListener.onRequestStopRecord();
 
             ImageView frame = window.getMagnetFrame();
+            frame.setColorFilter(0xffFFFFFF);
+
             if(mInvisibleRecord){
+                mMagnet.lockPosition(false);
                 mMagnet.getView().setVisibility(View.VISIBLE);
             }
             else{
-                frame.setColorFilter(0xffffffff);
-                mRotate1.cancel();
+                if(mRotate1 != null && mRotate1.isStarted()){
+                    mRotate1.cancel();
+                }
             }
             mRotate2 = genRotateAnimation(frame , 6000);
             mRotate2.start();
@@ -183,6 +187,7 @@ public class FloatingManager implements MagnetWindow.Listener {
             mMagnet.getMagnetText().setText("");
 
             if(mInvisibleRecord){
+                mMagnet.lockPosition(true);
                 mMagnet.getView().setVisibility(View.INVISIBLE);
             }
             else{
