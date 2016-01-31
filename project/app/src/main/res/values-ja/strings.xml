@@ -25,5 +25,10 @@
     <string name="plus_x_seconds_later">+ %1$d 秒後</string>
 
 
+    <!-- messages -->
+    <string name="message_reason_record_storage">動画を撮影保存するためにストレージへの書き込み許可が必要です。</string>
+    <string name="message_reason_delete_video">削除するためにストレージへの書き込み許可が必要です。</string>
+
+
 
 </resources>

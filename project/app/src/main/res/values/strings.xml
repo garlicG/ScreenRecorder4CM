@@ -24,5 +24,8 @@
     <string name="x_seconds_later">%1$d sec later</string>
     <string name="plus_x_seconds_later">+ %1$d sec later</string>
 
+    <!-- messages -->
+    <string name="message_reason_record_storage">Storage permission is required to save the record.</string>
+    <string name="message_reason_delete_video">Storage permission is required for deleting.</string>
 
 </resources>

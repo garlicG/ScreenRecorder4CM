@@ -1,6 +1,7 @@
 package com.garlicg.screenrecordct;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
@@ -29,6 +30,8 @@ import com.garlicg.cutin.triggerextension.TriggerUtil;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
 import java.util.ArrayList;
+
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class SettingsActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -88,7 +91,7 @@ public class SettingsActivity extends AppCompatActivity
                 tryRecordService();
             }
         });
-        launchButton.setVisibility(mSticky && isGrantedPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        launchButton.setVisibility(mSticky && isGrantedPermission(WRITE_EXTERNAL_STORAGE)
                 ? View.GONE
                 : View.VISIBLE);
 
@@ -111,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if(mSticky && isGrantedPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+        if(mSticky && isGrantedPermission(WRITE_EXTERNAL_STORAGE)){
             requestCapture(REQUEST_STICKY_CAPTURE);
         }
         else{
@@ -386,21 +389,13 @@ public class SettingsActivity extends AppCompatActivity
      * -> start RecordService
      */
     private void tryRecordService() {
-        final String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        final String permission = WRITE_EXTERNAL_STORAGE;
         final int requestCode = REQUEST_WRITE_EXTERNAL_STORAGE;
 
         if (isGrantedPermission(permission)) {
             requestCapture(REQUEST_CAPTURE);
         } else {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                // FIXME Show dialog before show activity_settings Activity.
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-            }
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         }
     }
 
@@ -414,8 +409,29 @@ public class SettingsActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)
+
+            // cancel
+            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
+
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)) {
+                    AlertDialog.Builder ab = new AlertDialog.Builder(this);
+                    ab.setMessage(getString(R.string.message_reason_record_storage));
+                    ab.setPositiveButton(getString(R.string.settings), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        }
+                    });
+                    ab.create().show();
+                }
+
                 return;
+            }
+
+            // next step
             requestCapture(REQUEST_CAPTURE);
         }
     }
