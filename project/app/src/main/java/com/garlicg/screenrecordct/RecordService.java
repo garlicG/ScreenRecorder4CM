@@ -55,13 +55,16 @@ public class RecordService extends Service implements FloatingManager.Listener ,
      *
      * 仕様として、設定画面開いたときに録画サービス表示があれば閉じる。
      * 録画中の終了リクエストはATフィールド
+     *
+     * @return 終了リクエストを投げたか
      */
-    public static void requestQuit(Context context){
-        if(!isRunning(context)) return;
+    public static boolean requestQuit(Context context){
+        if(!isRunning(context)) return false;
 
         Intent intent = new Intent(context , RecordService.class);
         intent.putExtra(EXTRA_ORDER , ORDER_QUIT);
         context.startService(intent);
+        return true;
     }
 
     private static boolean isRunning(Context context) {
@@ -209,7 +212,6 @@ public class RecordService extends Service implements FloatingManager.Listener ,
                 Intent intent = new Intent(RecordService.this , SettingsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                stopSelf();
             }
         }, 200);
         return true;

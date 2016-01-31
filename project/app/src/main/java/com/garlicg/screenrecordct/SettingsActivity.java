@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.garlicg.cutin.triggerextension.ResultBundleBuilder;
 import com.garlicg.cutin.triggerextension.TriggerSetting;
+import com.garlicg.cutin.triggerextension.TriggerUtil;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
 import java.util.ArrayList;
@@ -33,15 +34,44 @@ public class SettingsActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int REQUEST_CAPTURE = 1;
-    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+    private static final int REQUEST_STICKY_CAPTURE = 2;
+    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 3;
 
     private AppPrefs mPrefs;
+
+    /**
+     * 録画サービスが存在する状態からこのActivityが起動された場合は
+     * ・Activity終了時に再度録画サービスが起動される
+     * ・起動ボタンが表示されない
+     * ただしパーミッションがある場合に限る
+     */
+    private static final String KEY_STICKY = "STICKY";
+    private boolean mSticky = false;
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_STICKY , mSticky);
+    }
+
+
+    void restore(Bundle savedInstanceState){
+        mSticky = savedInstanceState.getBoolean(KEY_STICKY , false);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RecordService.requestQuit(this);
+        if(savedInstanceState == null){
+            mSticky = RecordService.requestQuit(this);
+        }else {
+            restore(savedInstanceState);
+        }
+
+
         mPrefs = new AppPrefs(this);
 
         setContentView(R.layout.activity_settings);
@@ -58,6 +88,9 @@ public class SettingsActivity extends AppCompatActivity
                 tryRecordService();
             }
         });
+        launchButton.setVisibility(mSticky && isGrantedPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                ? View.GONE
+                : View.VISIBLE);
 
         createVideoSize(savedInstanceState);
         createFireCutin(savedInstanceState);
@@ -73,6 +106,54 @@ public class SettingsActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         invalidateVideoCount();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if(mSticky && isGrantedPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            requestCapture(REQUEST_STICKY_CAPTURE);
+        }
+        else{
+            super.onBackPressed();
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // from #requestCapture onClick LaunchButton
+        if (requestCode == REQUEST_CAPTURE) {
+            if (resultCode != RESULT_OK || data == null) return;
+            Intent intent = RecordService.newStartIntent(this, data);
+            startService(intent);
+            finish();
+        }
+        // from #requestCapture onBackPress
+        else if(requestCode == REQUEST_STICKY_CAPTURE){
+            if(resultCode == RESULT_OK && data != null){
+                Intent intent = RecordService.newStartIntent(this, data);
+                startService(intent);
+            }
+            finish();
+        }
+    }
+
+
+    @Override
+    public void finish() {
+        // カットインマネージャーからの起動のみ想定
+        // RecentTask起動とかはたぶんもんだいない
+        ResultBundleBuilder builder = new ResultBundleBuilder(this);
+        builder.add(new StartRecordTrigger(this));
+
+        Intent intent = new Intent();
+        intent.putExtras(builder.build());
+        setResult(RESULT_OK, intent);
+
+        super.finish();
     }
 
 
@@ -309,7 +390,7 @@ public class SettingsActivity extends AppCompatActivity
         final int requestCode = REQUEST_WRITE_EXTERNAL_STORAGE;
 
         if (isGrantedPermission(permission)) {
-            requestCapture();
+            requestCapture(REQUEST_CAPTURE);
         } else {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                 // FIXME Show dialog before show activity_settings Activity.
@@ -335,41 +416,15 @@ public class SettingsActivity extends AppCompatActivity
         if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)
                 return;
-            requestCapture();
+            requestCapture(REQUEST_CAPTURE);
         }
     }
 
 
-    void requestCapture() {
+    void requestCapture(int requestCode) {
         MediaProjectionManager mm = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
         Intent intent = mm.createScreenCaptureIntent();
-        startActivityForResult(intent, REQUEST_CAPTURE);
+        startActivityForResult(intent, requestCode);
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // from #requestCapture
-        if (requestCode == REQUEST_CAPTURE) {
-            if (resultCode != RESULT_OK || data == null) return;
-            Intent intent = RecordService.newStartIntent(this, data);
-            startService(intent);
-            finish();
-        }
-    }
-
-
-    @Override
-    public void finish() {
-        ResultBundleBuilder builder = new ResultBundleBuilder(this);
-        builder.add(new StartRecordTrigger(this));
-
-        Intent intent = new Intent();
-        intent.putExtras(builder.build());
-        setResult(RESULT_OK, intent);
-
-        super.finish();
-    }
 }
