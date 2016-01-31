@@ -35,7 +35,6 @@ public class FloatingManager implements MagnetWindow.Listener {
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
     private ObjectAnimator mRotate1;
-    private ObjectAnimator mRotate2;
 
     private static final int STATE_CONTROLLABLE = 0;
     private static final int STATE_COUNT_DOWN = 1;
@@ -98,7 +97,6 @@ public class FloatingManager implements MagnetWindow.Listener {
         mState = STATE_CONTROLLABLE;
         mVibrator.vibrate(800);
         mMagnet.getMagnetFrame().setColorFilter(null);
-        mRotate2.cancel();
         mMagnet.getMagnetText().setText("OK");
         mHandler.postDelayed(mOKDismiss, 1000);
     }
@@ -122,8 +120,6 @@ public class FloatingManager implements MagnetWindow.Listener {
                 mRotate1.cancel();
             }
         }
-        mRotate2 = genRotateAnimation(frame , 1000);
-        mRotate2.start();
     }
 
 
