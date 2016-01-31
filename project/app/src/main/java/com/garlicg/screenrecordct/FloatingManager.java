@@ -3,6 +3,7 @@ package com.garlicg.screenrecordct;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Handler;
@@ -20,6 +21,9 @@ import com.garlicg.screenrecordct.magnet.IndicatorWindow;
 /**
  */
 public class FloatingManager implements MagnetWindow.Listener {
+
+    static final String EXTRA_INVISIBLE_RECORD ="EXTRA_INVISIBLE_RECORD";
+    private boolean mInvisibleRecord = false;
 
     private final Context mContext;
     private final Vibrator mVibrator;
@@ -83,6 +87,11 @@ public class FloatingManager implements MagnetWindow.Listener {
     }
 
 
+    void updateState(Intent intent){
+        mInvisibleRecord = intent.getBooleanExtra(EXTRA_INVISIBLE_RECORD , false);
+    }
+
+
     public void initState(){
         mState = STATE_CONTROLLABLE;
         mVibrator.vibrate(800);
@@ -100,22 +109,30 @@ public class FloatingManager implements MagnetWindow.Listener {
 
         if(mState == STATE_CONTROLLABLE ){
             mState = STATE_COUNT_DOWN;
+
             mVibrator.vibrate(15);
             startCountDown();
         }
         else if(mState == STATE_COUNT_DOWN){
             mState = STATE_CONTROLLABLE;
+
             mVibrator.vibrate(15);
             cancelCountDown();
         }
         else if(mState == STATE_RECORDING){
             mState = STATE_STOPPING;
+
             mVibrator.vibrate(15);
             mListener.onRequestStopRecord();
 
             ImageView frame = window.getMagnetFrame();
-            frame.setColorFilter(0xffffffff);
-            mRotate1.cancel();
+            if(mInvisibleRecord){
+                mMagnet.getView().setVisibility(View.VISIBLE);
+            }
+            else{
+                frame.setColorFilter(0xffffffff);
+                mRotate1.cancel();
+            }
             mRotate2 = genRotateAnimation(frame , 6000);
             mRotate2.start();
         }
@@ -160,18 +177,21 @@ public class FloatingManager implements MagnetWindow.Listener {
         @Override
         public void run() {
             mState = STATE_RECORDING;
-            mListener.onRequestStartRecord();
 
-            View v = mMagnet.getView();
-            v.setActivated(true);
+            mListener.onRequestStartRecord();
 
             mMagnet.getMagnetText().setText("");
 
-            ImageView image = mMagnet.getMagnetFrame();
-            image.setColorFilter(0xffff0000);
-            image.setRotation(image.getRotation() % 360);
-            mRotate1 = genRotateAnimation(image, 2000);
-            mRotate1.start();
+            if(mInvisibleRecord){
+                mMagnet.getView().setVisibility(View.INVISIBLE);
+            }
+            else{
+                ImageView image = mMagnet.getMagnetFrame();
+                image.setColorFilter(0xffff0000);
+                image.setRotation(image.getRotation() % 360);
+                mRotate1 = genRotateAnimation(image, 2000);
+                mRotate1.start();
+            }
         }
     };
 

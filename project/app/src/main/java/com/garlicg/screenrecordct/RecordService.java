@@ -34,6 +34,7 @@ public class RecordService extends Service implements FloatingManager.Listener ,
         Intent intent = new Intent(context , RecordService.class);
         intent.putExtra(RecordHelper.EXTRA_VIDEO_PERCENTAGE , prefs.getVideoPercentage());
         intent.putExtra(RecordHelper.EXTRA_MEDIA_PROJECTION_RESULT, mediaProjectionResult);
+        intent.putExtra(FloatingManager.EXTRA_INVISIBLE_RECORD , prefs.getInvisibleRecord());
         intent.putExtra(EXTRA_ORDER, ORDER_START);
         return intent;
     }
@@ -96,6 +97,7 @@ public class RecordService extends Service implements FloatingManager.Listener ,
 
             if(mRecordHelper.checkEnableRecord(intent)){
                 mIntent = intent;
+                mFloatingManager.updateState(intent);
             }
             else{
                 stopSelf();
