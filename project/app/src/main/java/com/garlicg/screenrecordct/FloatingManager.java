@@ -112,8 +112,7 @@ public class FloatingManager implements MagnetWindow.Listener {
         frame.setColorFilter(0xffFFFFFF);
 
         if(mInvisibleRecord){
-            mMagnet.lockPosition(false);
-            mMagnet.getView().setVisibility(View.VISIBLE);
+            mMagnet.setNightmareMode(false);
         }
         else{
             if(mRotate1 != null && mRotate1.isStarted()){
@@ -191,8 +190,7 @@ public class FloatingManager implements MagnetWindow.Listener {
             mMagnet.getMagnetText().setText("");
 
             if(mInvisibleRecord){
-                mMagnet.lockPosition(true);
-                mMagnet.getView().setVisibility(View.INVISIBLE);
+                mMagnet.setNightmareMode(true);
             }
             else{
                 ImageView image = mMagnet.getMagnetFrame();

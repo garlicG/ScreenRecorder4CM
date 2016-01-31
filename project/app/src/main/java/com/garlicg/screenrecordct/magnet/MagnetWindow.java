@@ -253,7 +253,8 @@ public class MagnetWindow extends FrameLayout{
 
     private boolean mQuiting = false;
     private boolean mMoving = false;
-    private boolean mMoveEnable = true;
+    private boolean mNightmareMode = false;
+    private boolean mNightmareStarted = false;
 
 
     public void disappear(long duration){
@@ -266,8 +267,15 @@ public class MagnetWindow extends FrameLayout{
     }
 
 
-    public void lockPosition(boolean lock){
-        mMoveEnable = !lock;
+    /**
+     * ナイトメアモード
+     * 表示がinvisibleになる
+     * windowの移動ができない
+     * slop、tapTimeout関係なしにクリック判定される
+     */
+    public void setNightmareMode(boolean enable){
+        mNightmareMode = enable;
+        mView.setVisibility(enable ? INVISIBLE : VISIBLE);
     }
 
 
@@ -283,6 +291,12 @@ public class MagnetWindow extends FrameLayout{
         if (action == MotionEvent.ACTION_DOWN) {
             pinParentInfoCache();
 
+            if(mNightmareMode){
+                mNightmareStarted = true;
+                mListener.onClick(this);
+                return true;
+            }
+
             final PointF touchPoint = getTouchPoint(event);
             mInitialTouchX = touchPoint.x;
             mInitialTouchY = touchPoint.y;
@@ -291,6 +305,10 @@ public class MagnetWindow extends FrameLayout{
             return true;
         }
         else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            if(mNightmareStarted){
+                return true;
+            }
+
             final PointF touchPoint = getTouchPoint(event);
              if(!mMoving){
                 float xDiff = Math.abs(mInitialTouchX - event.getX());
@@ -306,10 +324,8 @@ public class MagnetWindow extends FrameLayout{
                  float toX = touchPoint.x - getWidth() /2;
                  float toY = touchPoint.y - getHeight()/2;
 
-                 if(mMoveEnable){
-                     locate(toX, toY);
-                     mListener.onDragging(this, mDecorSizeCache, touchPoint);
-                 }
+                 locate(toX, toY);
+                 mListener.onDragging(this, mDecorSizeCache, touchPoint);
 
                  event.offsetLocation(toX, toY);
                  mVelocityTracker.addMovement(event);
@@ -317,6 +333,11 @@ public class MagnetWindow extends FrameLayout{
             return true;
         }
         else if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+            if(mNightmareStarted){
+                mNightmareStarted = false;
+                return false;
+            }
+
             final PointF touchPoint = getTouchPoint(event);
 
             // クリックで終了 (動きなし)
@@ -330,7 +351,7 @@ public class MagnetWindow extends FrameLayout{
                 // none
             }
             // 右が左にWindowを移動する
-            else if(mMoveEnable){
+            else {
                 wallOn(touchPoint);
             }
 
