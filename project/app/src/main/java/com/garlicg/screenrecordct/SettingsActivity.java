@@ -201,10 +201,11 @@ public class SettingsActivity extends AppCompatActivity
         valueView.setText(getString(R.string.x_ms_later, value));
 
         // handle value from dialog callback
-        final ValidateIntDialogBuilder.Callback callback = new ValidateIntDialogBuilder.Callback() {
+        final InputSecondDialogBuilder.Callback callback = new InputSecondDialogBuilder.Callback() {
             @Override
             public boolean onValidate(int value) {
                 int msec = value * 100;
+                //noinspection PointlessArithmeticExpression
                 return msec >= 0 && msec <= 1 * 1000 * 1000 - 1; // 999秒
             }
             @Override
@@ -220,7 +221,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 int value = mPrefs.getFireCutinOffsetMilliSec() / 100;
-                AlertDialog ad = ValidateIntDialogBuilder.build(v.getContext(), value, null, callback);
+                AlertDialog ad = InputSecondDialogBuilder.build(v.getContext(), value, getString(R.string.unit_00ms_later), callback);
                 ad.show();
             }
         });
@@ -241,11 +242,12 @@ public class SettingsActivity extends AppCompatActivity
         );
 
         // handle value from dialog callback
-        final ValidateIntDialogBuilder.Callback callback = new ValidateIntDialogBuilder.Callback() {
+        final InputSecondDialogBuilder.Callback callback = new InputSecondDialogBuilder.Callback() {
             @Override
             public boolean onValidate(int value) {
                 int msec = value * 100;
-                return msec >= 0 && msec <= 1 * 100 * 1000 - 1; // 999秒
+                //noinspection PointlessArithmeticExpression
+                return msec >= 0 && msec <= 1 * 1000 * 1000 - 1; // 999秒
             }
             @Override
             public void onOk(int value) {
@@ -264,7 +266,7 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 int value = mPrefs.getAutoStopMilliSec() / 100;
-                AlertDialog ad = ValidateIntDialogBuilder.build(v.getContext(), value, null, callback);
+                AlertDialog ad = InputSecondDialogBuilder.build(v.getContext(), value, getString(R.string.unit_00ms_later), callback);
                 ad.show();
             }
         });

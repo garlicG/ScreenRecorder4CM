@@ -7,14 +7,18 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.garlicg.screenrecordct.util.DisplayUtils;
+import com.garlicg.screenrecordct.util.ViewFinder;
 
-public class ValidateIntDialogBuilder {
+public class InputSecondDialogBuilder {
 
 
     interface Callback{
@@ -23,25 +27,28 @@ public class ValidateIntDialogBuilder {
     }
 
 
-    public static AlertDialog build(final Context context, int value, CharSequence hint, final Callback callback){
+    public static AlertDialog build(final Context context, int value, CharSequence unit, final Callback callback){
         AlertDialog.Builder ab = new AlertDialog.Builder(context);
 
-        final EditText editText = new EditText(context);
-        editText.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
-        editText.setHint(hint);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_input_second, null, false);
+        final EditText editText = ViewFinder.byId(view, R.id.number);
         String valueText = String.valueOf(value);
         editText.setText(valueText);
         editText.setSelection(valueText.length());
-        InputFilter.LengthFilter lengthFilter = new InputFilter.LengthFilter(String.valueOf(Integer.MAX_VALUE).length() - 1);
-        editText.setFilters(new InputFilter[]{lengthFilter});
+        TextView unitView = ViewFinder.byId(view , R.id.unit);
+        unitView.setText(unit);
 
         int dp16 = DisplayUtils.dpToPx(context.getResources(), 16);
-        ab.setView(editText, dp16, dp16, dp16, 0);
+        ab.setView(view, dp16, dp16, dp16, 0);
 
         ab.setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int value = Integer.parseInt(editText.getText().toString());
+                int value = 0;
+                CharSequence s = editText.getText();
+                if (!TextUtils.isEmpty(s)) {
+                    value = Integer.parseInt(s.toString());
+                }
                 callback.onOk(value);
             }
         });
@@ -61,18 +68,12 @@ public class ValidateIntDialogBuilder {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Button button = ad.getButton(DialogInterface.BUTTON_POSITIVE);
-                if (TextUtils.isEmpty(s)) {
-                    button.setEnabled(false);
+                int value = 0;
+                if (!TextUtils.isEmpty(s)) {
+                    value = Integer.parseInt(s.toString());
                 }
-                else {
-                    try {
-                        int value = Integer.parseInt(s.toString());
-                        button.setEnabled(callback.onValidate(value));
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        button.setEnabled(false);
-                    }
-                }
+                button.setEnabled(callback.onValidate(value));
+
             }
 
             @Override
