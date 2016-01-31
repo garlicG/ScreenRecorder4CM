@@ -139,11 +139,12 @@ public class RecordService extends Service implements FloatingManager.Listener ,
 
     @Override
     public void onRequestStartRecord() {
-
+        // ボタン映る場合があるので少しだけ遅らせる
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mRecordHelper.startRecord(mIntent);
+
                 mHandler.postDelayed(mCutinFire
                         , mIntent.getIntExtra(EXTRA_FIRE_CUTIN_OFFSET, 0));
             }
@@ -153,11 +154,19 @@ public class RecordService extends Service implements FloatingManager.Listener ,
 
     @Override
     public void onRequestStopRecord() {
-        if(mRecordHelper.isRunning()){
-            mRecordHelper.stopRecording();
-            mHandler.removeCallbacks(mCutinFire);
-            mHandler.removeCallbacks(mAutoStop);
-        }
+        // スタートで遅らせているのでストップも少し遅らせる
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(mRecordHelper.isRunning()){
+                    mRecordHelper.stopRecording();
+                    mHandler.removeCallbacks(mCutinFire);
+                    mHandler.removeCallbacks(mAutoStop);
+                }
+            }
+        }, 10);
+
+
     }
 
 

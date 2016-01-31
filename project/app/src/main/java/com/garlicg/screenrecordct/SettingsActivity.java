@@ -1,6 +1,5 @@
 package com.garlicg.screenrecordct;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -25,11 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.garlicg.cutin.triggerextension.ResultBundleBuilder;
-import com.garlicg.cutin.triggerextension.TriggerSetting;
-import com.garlicg.cutin.triggerextension.TriggerUtil;
 import com.garlicg.screenrecordct.util.ViewFinder;
-
-import java.util.ArrayList;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -203,19 +197,21 @@ public class SettingsActivity extends AppCompatActivity
 
         // init value setup
         final TextView valueView = ViewFinder.byId(this, R.id.fireCutinValue);
-        int value = mPrefs.getFireCutinOffsetSec();
-        valueView.setText(getString(R.string.x_seconds_later, value));
+        int value = mPrefs.getFireCutinOffsetMilliSec();
+        valueView.setText(getString(R.string.x_ms_later, value));
 
         // handle value from dialog callback
         final ValidateIntDialogBuilder.Callback callback = new ValidateIntDialogBuilder.Callback() {
             @Override
             public boolean onValidate(int value) {
-                return value >= 0 && value <= 999;
+                int msec = value * 100;
+                return msec >= 0 && msec <= 1 * 1000 * 1000 - 1; // 999秒
             }
             @Override
             public void onOk(int value) {
-                valueView.setText(getString(R.string.x_seconds_later, value));
-                mPrefs.saveFireCutinOffsetSec(value);
+                int msec = value * 100;
+                valueView.setText(getString(R.string.x_ms_later, msec));
+                mPrefs.saveFireCutinOffsetMilliSec(msec);
             }
         };
 
@@ -223,7 +219,7 @@ public class SettingsActivity extends AppCompatActivity
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int value = mPrefs.getFireCutinOffsetSec();
+                int value = mPrefs.getFireCutinOffsetMilliSec() / 100;
                 AlertDialog ad = ValidateIntDialogBuilder.build(v.getContext(), value, null, callback);
                 ad.show();
             }
@@ -238,26 +234,28 @@ public class SettingsActivity extends AppCompatActivity
 
         // init value setup
         final TextView valueView = ViewFinder.byId(this, R.id.autoStopValue);
-        int value = mPrefs.getAutoStopSec();
+        int value = mPrefs.getAutoStopMilliSec();
         valueView.setText(value == 0
                  ? getString(R.string.no_seconds_only_manual_stop)
-                 : getString(R.string.plus_x_seconds_later, value)
+                 : getString(R.string.plus_x_ms_later, value)
         );
 
         // handle value from dialog callback
         final ValidateIntDialogBuilder.Callback callback = new ValidateIntDialogBuilder.Callback() {
             @Override
             public boolean onValidate(int value) {
-                return value >= 0 && value <= 999;
+                int msec = value * 100;
+                return msec >= 0 && msec <= 1 * 100 * 1000 - 1; // 999秒
             }
             @Override
             public void onOk(int value) {
-                valueView.setText(value == 0
+                int msec = value * 100;
+                valueView.setText(msec == 0
                         ? getString(R.string.no_seconds_only_manual_stop)
-                        : getString(R.string.plus_x_seconds_later, value)
+                        : getString(R.string.plus_x_ms_later, msec)
                 );
 
-                mPrefs.saveAutoStopSec(value);
+                mPrefs.saveAutoStopMilliSec(msec);
             }
         };
 
@@ -265,7 +263,7 @@ public class SettingsActivity extends AppCompatActivity
         valueView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int value = mPrefs.getAutoStopSec();
+                int value = mPrefs.getAutoStopMilliSec() / 100;
                 AlertDialog ad = ValidateIntDialogBuilder.build(v.getContext(), value, null, callback);
                 ad.show();
             }

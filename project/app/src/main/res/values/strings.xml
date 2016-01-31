@@ -11,7 +11,7 @@
     <string name="video_size">Video size</string>
     <string name="fire_cutin">Fire CUT-IN</string>
     <string name="auto_stop">Auto stop</string>
-    <string name="no_seconds_only_manual_stop">+ 0 sec later\n(Manual stop)</string>
+    <string name="no_seconds_only_manual_stop">+ 0 ms later\n(Manual stop)</string>
     <string name="when_start_record">When start recording</string>
     <string name="trigger_title">Trigger title</string>
     <string name="trigger_title_default">SCREEN RECORD</string>
@@ -21,8 +21,9 @@
     <string name="video_list_x">Video list (%1$d)</string>
 
     <!-- unit -->
-    <string name="x_seconds_later">%1$d sec later</string>
-    <string name="plus_x_seconds_later">+ %1$d sec later</string>
+    <string name="unit_00ms_later">00 ms later</string>
+    <string name="x_ms_later">%1$d ms later</string>
+    <string name="plus_x_ms_later">+ %1$d ms later</string>
 
     <!-- messages -->
     <string name="message_reason_record_storage">Storage permission is required to save the record.</string>

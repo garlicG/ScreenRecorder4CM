@@ -11,7 +11,7 @@
     <string name="video_size">ビデオサイズ</string>
     <string name="fire_cutin">カットイン表示</string>
     <string name="auto_stop">自動停止</string>
-    <string name="no_seconds_only_manual_stop">+ 0秒後\n(手動停止)</string>
+    <string name="no_seconds_only_manual_stop">+ 0ミリ秒後\n(手動停止)</string>
     <string name="when_start_record">録画を開始したとき</string>
     <string name="trigger_title">トリガータイトル</string>
     <string name="trigger_title_default">SCREEN RECORD</string>
@@ -21,8 +21,9 @@
     <string name="video_list_x">動画一覧 (%1$d)</string>
 
     <!-- unit -->
-    <string name="x_seconds_later">%1$d 秒後</string>
-    <string name="plus_x_seconds_later">+ %1$d 秒後</string>
+    <string name="unit_00ms_later">00 ミリ秒後</string>
+    <string name="x_ms_later">%1$d ミリ秒後</string>
+    <string name="plus_x_ms_later">+ %1$d ミリ秒後</string>
 
 
     <!-- messages -->
