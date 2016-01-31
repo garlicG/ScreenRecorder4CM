@@ -136,14 +136,27 @@ public class RecordService extends Service implements FloatingManager.Listener ,
 
     @Override
     public void onRequestStartRecord() {
-        mHandler.post(new Runnable() {
+
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mRecordHelper.startRecord(mIntent);
-                mHandler.postDelayed(mCutinFire, mIntent.getIntExtra(EXTRA_FIRE_CUTIN_OFFSET, 0));
+                mHandler.postDelayed(mCutinFire
+                        , mIntent.getIntExtra(EXTRA_FIRE_CUTIN_OFFSET, 0));
             }
-        });
+        }, 10);
     }
+
+
+    @Override
+    public void onRequestStopRecord() {
+        if(mRecordHelper.isRunning()){
+            mRecordHelper.stopRecording();
+            mHandler.removeCallbacks(mCutinFire);
+            mHandler.removeCallbacks(mAutoStop);
+        }
+    }
+
 
     private Runnable mCutinFire = new Runnable() {
         @Override
@@ -160,20 +173,14 @@ public class RecordService extends Service implements FloatingManager.Listener ,
         }
     };
 
+
     private Runnable mAutoStop = new Runnable() {
         @Override
         public void run() {
             mFloatingManager.changeToStoppingState();
+            // -> onRequestStopRecord
         }
     };
-
-
-    @Override
-    public void onRequestStopRecord() {
-        mHandler.removeCallbacks(mCutinFire);
-        mHandler.removeCallbacks(mAutoStop);
-        mRecordHelper.stopRecording();
-    }
 
 
     @Override

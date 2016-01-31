@@ -149,8 +149,6 @@ public class FloatingManager implements MagnetWindow.Listener {
     }
 
 
-
-
     private void startCountDown(){
         mMagnet.getMagnetIcon().setVisibility(View.INVISIBLE);
         mMagnet.getMagnetText().setText("3");
@@ -190,8 +188,6 @@ public class FloatingManager implements MagnetWindow.Listener {
         public void run() {
             mState = STATE_RECORDING;
 
-            mListener.onRequestStartRecord();
-
             mMagnet.getMagnetText().setText("");
 
             if(mInvisibleRecord){
@@ -205,6 +201,8 @@ public class FloatingManager implements MagnetWindow.Listener {
                 mRotate1 = genRotateAnimation(image, 2000);
                 mRotate1.start();
             }
+
+            mListener.onRequestStartRecord();
         }
     };
 

@@ -132,9 +132,7 @@ public class RecordHelper {
     }
 
 
-
     void stopRecording() {
-        if(!mRunning)return;
         mRunning = false;
 
         mProjection.stop();
