@@ -4,6 +4,7 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -17,9 +18,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -57,6 +56,7 @@ public class MagnetWindow extends FrameLayout{
     private static final String KEY_X = "x";
     private static final String KEY_Y = "y";
     private WindowManager mWindowManager;
+    private int mOrientation;
     private View mView;
     private int mTouchYDiff = 0;
     VelocityTracker mVelocityTracker = null;
@@ -88,6 +88,7 @@ public class MagnetWindow extends FrameLayout{
 //        mTapTimeout = ViewConfiguration.getTapTimeout(); // bit long time...
         mTapTimeout = 60;
         mMaxVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
+        mOrientation = context.getResources().getConfiguration().orientation;
     }
 
 
@@ -114,6 +115,43 @@ public class MagnetWindow extends FrameLayout{
             scale.setInterpolator(new DecelerateInterpolator());
             mView.startAnimation(scale);
         }
+        pinParentInfoCache();
+    }
+
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        reposition(newConfig);
+        pinParentInfoCache();
+    }
+
+
+    private void reposition(Configuration newConfig){
+        // 向きが一緒なのでなにもしない
+        if(mOrientation == newConfig.orientation)return;
+        mOrientation = newConfig.orientation;
+
+        // 向き情報が一緒だけど縦横サイズ的に向きが変わってないので何もしない
+        Point displaySize = new Point();
+        mWindowManager.getDefaultDisplay().getSize(displaySize);
+        if(mDisplaySizeCache.x == displaySize.x)return;
+
+        WindowManager.LayoutParams lp = (WindowManager.LayoutParams) getLayoutParams();
+
+        // X位置を右か左で決定
+        boolean isLeft = lp.x <= getWidth();
+        lp.x = isLeft ? 0 : displaySize.x - getWidth();
+
+        // Y位置ははみ出た場合のみ調整する
+        if(displaySize.y < mDisplaySizeCache.y){
+            if(displaySize.y - (getHeight() + mTouchYDiff) < lp.y){
+                lp.y = displaySize.y - (getHeight() + mTouchYDiff);
+            }
+        }
+
+        // 再配置
+        mWindowManager.updateViewLayout(this, lp);
     }
 
 
@@ -152,9 +190,10 @@ public class MagnetWindow extends FrameLayout{
     private final Point mDecorSizeCache = new Point();
     private final PointF mTouchPointCache = new PointF();
 
-    private void updateWindowSize(){
+
+    private void pinParentInfoCache(){
         // ステータス分のずれがある場合はタッチをズラす
-//        Timber.i("dl:" + mDecorDummy.getHeight());
+//        Cat.i("dl:" + mDecorDummy.getHeight());
         mWindowManager.getDefaultDisplay().getSize(mDisplaySizeCache);
 
         mDecorSizeCache.x = mDecorDummy.getWidth();
@@ -242,7 +281,7 @@ public class MagnetWindow extends FrameLayout{
         final int action = event.getAction();
 
         if (action == MotionEvent.ACTION_DOWN) {
-            updateWindowSize();
+            pinParentInfoCache();
 
             final PointF touchPoint = getTouchPoint(event);
             mInitialTouchX = touchPoint.x;
@@ -256,7 +295,7 @@ public class MagnetWindow extends FrameLayout{
              if(!mMoving){
                 float xDiff = Math.abs(mInitialTouchX - event.getX());
                 float yDiff = Math.abs(mInitialTouchY - event.getY());
-                if ((xDiff + yDiff) / 2 > mSlop && mInitialTapTime + mTapTimeout >= System.currentTimeMillis()) {
+                if ((xDiff + yDiff) / 2 > mSlop && mInitialTapTime + mTapTimeout < System.currentTimeMillis()) {
                     if (mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
                     else mVelocityTracker.clear();
                     mListener.onDragStart(this);
