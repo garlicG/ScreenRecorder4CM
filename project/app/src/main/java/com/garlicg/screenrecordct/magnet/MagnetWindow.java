@@ -261,7 +261,11 @@ public class MagnetWindow extends FrameLayout{
                  float toX = touchPoint.x - getWidth() /2;
                  float toY = touchPoint.y - getHeight()/2;
                  locate(toX, toY);
-                 mListener.onDragging(this, mDecorSizeCache, touchPoint);
+
+                 if(mInitialTapTime + mTapTimeout >= System.currentTimeMillis()){
+                     mListener.onDragging(this, mDecorSizeCache, touchPoint);
+                 }
+
                  event.offsetLocation(toX, toY);
                  mVelocityTracker.addMovement(event);
             }
