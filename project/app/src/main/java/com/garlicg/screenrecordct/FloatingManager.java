@@ -87,7 +87,7 @@ public class FloatingManager implements MagnetWindow.Listener {
     }
 
 
-    void updateState(Intent intent){
+    void updateParams(Intent intent){
         mInvisibleRecord = intent.getBooleanExtra(EXTRA_INVISIBLE_RECORD , false);
     }
 
@@ -98,6 +98,30 @@ public class FloatingManager implements MagnetWindow.Listener {
         mMagnet.getMagnetFrame().setColorFilter(null);
         mMagnet.getMagnetIcon().setVisibility(View.VISIBLE);
         mRotate2.cancel();
+    }
+
+
+    public void changeToStoppingState(){
+        if(mState == STATE_STOPPING) return;
+        mState = STATE_STOPPING;
+
+        mVibrator.vibrate(15);
+        mListener.onRequestStopRecord();
+
+        ImageView frame = mMagnet.getMagnetFrame();
+        frame.setColorFilter(0xffFFFFFF);
+
+        if(mInvisibleRecord){
+            mMagnet.lockPosition(false);
+            mMagnet.getView().setVisibility(View.VISIBLE);
+        }
+        else{
+            if(mRotate1 != null && mRotate1.isStarted()){
+                mRotate1.cancel();
+            }
+        }
+        mRotate2 = genRotateAnimation(frame , 6000);
+        mRotate2.start();
     }
 
 
@@ -120,27 +144,11 @@ public class FloatingManager implements MagnetWindow.Listener {
             cancelCountDown();
         }
         else if(mState == STATE_RECORDING){
-            mState = STATE_STOPPING;
-
-            mVibrator.vibrate(15);
-            mListener.onRequestStopRecord();
-
-            ImageView frame = window.getMagnetFrame();
-            frame.setColorFilter(0xffFFFFFF);
-
-            if(mInvisibleRecord){
-                mMagnet.lockPosition(false);
-                mMagnet.getView().setVisibility(View.VISIBLE);
-            }
-            else{
-                if(mRotate1 != null && mRotate1.isStarted()){
-                    mRotate1.cancel();
-                }
-            }
-            mRotate2 = genRotateAnimation(frame , 6000);
-            mRotate2.start();
+            changeToStoppingState();
         }
     }
+
+
 
 
     private void startCountDown(){

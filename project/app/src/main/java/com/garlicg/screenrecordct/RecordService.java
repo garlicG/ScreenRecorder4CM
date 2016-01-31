@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 
+import com.garlicg.cutin.triggerextension.FireIntentBuilder;
 import com.garlicg.screenrecordct.util.Cat;
 
 /**
@@ -20,6 +21,10 @@ public class RecordService extends Service implements FloatingManager.Listener ,
     public static final String EXTRA_ORDER = "ORDER";
     public static final int ORDER_START = 1;
     public static final int ORDER_QUIT = 2;
+    public static final String EXTRA_FIRE_CUTIN_OFFSET = "FIRE_CUTIN_OFFSET";
+    public static final String EXTRA_AUTO_STOP = "AUTO_STOP";
+    public static final String EXTRA_TRIGGER_TITLE = "TRIGGER_TITLE";
+    public static final String EXTRA_TRIGGER_MESSAGE = "TRIGGER_MESSAGE";
 
 
     /**
@@ -32,10 +37,15 @@ public class RecordService extends Service implements FloatingManager.Listener ,
     public static Intent newStartIntent(Context context, Intent mediaProjectionResult){
         AppPrefs prefs = new AppPrefs(context);
         Intent intent = new Intent(context , RecordService.class);
+        intent.putExtra(EXTRA_ORDER, ORDER_START);
+        intent.putExtra(EXTRA_FIRE_CUTIN_OFFSET, prefs.getFireCutinOffsetMilliSec());
+        intent.putExtra(EXTRA_AUTO_STOP, prefs.getAutoStopMilliSec());
+        intent.putExtra(EXTRA_TRIGGER_TITLE, prefs.getTriggerTitle());
+        intent.putExtra(EXTRA_TRIGGER_MESSAGE, prefs.getTriggerMessage());
         intent.putExtra(RecordHelper.EXTRA_VIDEO_PERCENTAGE , prefs.getVideoPercentage());
         intent.putExtra(RecordHelper.EXTRA_MEDIA_PROJECTION_RESULT, mediaProjectionResult);
         intent.putExtra(FloatingManager.EXTRA_INVISIBLE_RECORD , prefs.getInvisibleRecord());
-        intent.putExtra(EXTRA_ORDER, ORDER_START);
+
         return intent;
     }
 
@@ -97,7 +107,7 @@ public class RecordService extends Service implements FloatingManager.Listener ,
 
             if(mRecordHelper.checkEnableRecord(intent)){
                 mIntent = intent;
-                mFloatingManager.updateState(intent);
+                mFloatingManager.updateParams(intent);
             }
             else{
                 stopSelf();
@@ -130,13 +140,38 @@ public class RecordService extends Service implements FloatingManager.Listener ,
             @Override
             public void run() {
                 mRecordHelper.startRecord(mIntent);
+                mHandler.postDelayed(mCutinFire, mIntent.getIntExtra(EXTRA_FIRE_CUTIN_OFFSET, 0));
             }
         });
     }
 
+    private Runnable mCutinFire = new Runnable() {
+        @Override
+        public void run() {
+            FireIntentBuilder builder = new FireIntentBuilder(RecordService.this, StartRecordTrigger.ID);
+            builder.setContentTitle(mIntent.getStringExtra(EXTRA_TRIGGER_TITLE));
+            builder.setContentMessage(mIntent.getStringExtra(EXTRA_TRIGGER_MESSAGE));
+            sendBroadcast(builder.intent());
+
+            int autoStop = mIntent.getIntExtra(EXTRA_AUTO_STOP , 0);
+            if(autoStop >0){
+                mHandler.postDelayed(mAutoStop , autoStop);
+            }
+        }
+    };
+
+    private Runnable mAutoStop = new Runnable() {
+        @Override
+        public void run() {
+            mFloatingManager.changeToStoppingState();
+        }
+    };
+
 
     @Override
     public void onRequestStopRecord() {
+        mHandler.removeCallbacks(mCutinFire);
+        mHandler.removeCallbacks(mAutoStop);
         mRecordHelper.stopRecording();
     }
 

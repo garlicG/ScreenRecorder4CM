@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -22,7 +23,11 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.garlicg.cutin.triggerextension.ResultBundleBuilder;
+import com.garlicg.cutin.triggerextension.TriggerSetting;
 import com.garlicg.screenrecordct.util.ViewFinder;
+
+import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -356,4 +361,15 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void finish() {
+        ResultBundleBuilder builder = new ResultBundleBuilder(this);
+        builder.add(new StartRecordTrigger(this));
+
+        Intent intent = new Intent();
+        intent.putExtras(builder.build());
+        setResult(RESULT_OK, intent);
+
+        super.finish();
+    }
 }
