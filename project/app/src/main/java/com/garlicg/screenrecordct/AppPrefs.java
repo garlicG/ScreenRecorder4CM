@@ -56,7 +56,7 @@ public class AppPrefs {
     private final static String AUTO_STOP_MSEC ="AUTO_STOP_MSEC";
 
     public int getAutoStopMilliSec() {
-        return mPrefs.getInt(AUTO_STOP_MSEC, 1000);
+        return mPrefs.getInt(AUTO_STOP_MSEC, 3000);
     }
 
     public void saveAutoStopMilliSec(int value) {
