@@ -250,7 +250,7 @@ public class MagnetWindow extends FrameLayout{
              if(!mMoving){
                 float xDiff = Math.abs(mInitialTouchX - event.getX());
                 float yDiff = Math.abs(mInitialTouchY - event.getY());
-                if ((xDiff + yDiff) / 2 > mSlop) {
+                if ((xDiff + yDiff) / 2 > mSlop && mInitialTapTime + mTapTimeout >= System.currentTimeMillis()) {
                     if (mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
                     else mVelocityTracker.clear();
                     mListener.onDragStart(this);
@@ -261,10 +261,7 @@ public class MagnetWindow extends FrameLayout{
                  float toX = touchPoint.x - getWidth() /2;
                  float toY = touchPoint.y - getHeight()/2;
                  locate(toX, toY);
-
-                 if(mInitialTapTime + mTapTimeout >= System.currentTimeMillis()){
-                     mListener.onDragging(this, mDecorSizeCache, touchPoint);
-                 }
+                 mListener.onDragging(this, mDecorSizeCache, touchPoint);
 
                  event.offsetLocation(toX, toY);
                  mVelocityTracker.addMovement(event);
@@ -279,26 +276,18 @@ public class MagnetWindow extends FrameLayout{
                 mListener.onClick(this);
                 return false;
             }
-            // クリックで終了 (動いたけどすぐ離した)
-            else if(mInitialTapTime + mTapTimeout >= System.currentTimeMillis()){
-                mListener.onClick(this);
-                wallOn(touchPoint);
-                mVelocityTracker.recycle();
-                mVelocityTracker = null;
-                return false;
-            }
 
             // リスナー側のドロップハンドリング
             if(mListener.onDrop(this, mDecorSizeCache, touchPoint)){
-                mVelocityTracker.recycle();
-                mVelocityTracker = null;
+                // none
             }
             // 右が左にWindowを移動する
             else {
                 wallOn(touchPoint);
-                mVelocityTracker.recycle();
-                mVelocityTracker = null;
             }
+
+            mVelocityTracker.recycle();
+            mVelocityTracker = null;
             return false;
         }
 
