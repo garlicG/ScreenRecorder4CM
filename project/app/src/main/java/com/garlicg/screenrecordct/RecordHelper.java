@@ -144,6 +144,7 @@ public class RecordHelper {
                 new MediaScannerConnection.OnScanCompletedListener() {
                     @Override
                     public void onScanCompleted(String path, final Uri uri) {
+                        Cat.i("path:" + path + " uri:" + uri);
                         mListener.onOutputVideo();
                     }
                 });
