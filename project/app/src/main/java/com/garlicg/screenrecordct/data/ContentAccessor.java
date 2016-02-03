@@ -25,10 +25,6 @@ public class ContentAccessor {
 
     private ContentResolver mContentResolver;
 
-    public ContentAccessor(Fragment f) {
-        this(f.getActivity());
-    }
-
     public ContentAccessor(Context context) {
         mContentResolver = context.getContentResolver();
     }

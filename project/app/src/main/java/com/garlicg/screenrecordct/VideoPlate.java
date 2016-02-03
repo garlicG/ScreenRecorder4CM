@@ -6,7 +6,6 @@ import android.media.ThumbnailUtils;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +20,10 @@ import com.garlicg.screenrecordct.data.ThumbCache;
 import com.garlicg.screenrecordct.plate.Plate;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class VideoPlate extends Plate<VideoPlate.VH>{
+
 
     public static VideoPlate newInstance(VideoModel video , Handler handler){
         VideoPlate plate = new VideoPlate();
@@ -33,38 +32,47 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
         return plate;
     }
 
+
     public static class VH extends RecyclerView.ViewHolder{
+        public static final int CLICK_THUMBNAIL = R.id.thumbnail;
+        public static final int CLICK_DELETE = R.id.delete;
+
         final ImageView thumbnail;
+        final View delete;
         final TextView title;
         final TextView duration;
         final TextView size;
         final TextView wh;
-        final View delete;
 
-        public VH(View itemView) {
+
+        public VH(View itemView, View.OnClickListener listener) {
             super(itemView);
 
             thumbnail = ViewFinder.byId(itemView , R.id.thumbnail);
+            thumbnail.setOnClickListener(listener);
             title = ViewFinder.byId(itemView , R.id.title);
             duration = ViewFinder.byId(itemView , R.id.duration);
             size = ViewFinder.byId(itemView , R.id.size);
             wh = ViewFinder.byId(itemView , R.id.wh);
             delete = ViewFinder.byId(itemView , R.id.delete);
+            delete.setOnClickListener(listener);
         }
     }
 
 
+
     @Override
-    protected VH onCreateViewHolder(LayoutInflater inflater, ViewGroup parent) {
-        return new VH(inflater.inflate(R.layout.plate_video ,parent , false));
+    protected VH onCreateViewHolder(LayoutInflater inflater, ViewGroup parent , View.OnClickListener listener) {
+        VH vh = new VH(inflater.inflate(R.layout.plate_video ,parent , false) , listener);
+        return vh;
     }
 
 
     public VideoModel video;
 
+
     @Override
     protected void onBind(Context context, VH vh) {
-        super.onBind(context, vh);
 
         String added = DateFormat.getDateFormat(context).format(new Date(video.dataAdded * 1000));
         vh.title.setText("" + added);
@@ -76,12 +84,7 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
     }
 
 
-
-    /**
-     * カットインアプリアイコンを非同期で読み込む
-     * 10msくらいかかる場合がある
-     */
-    protected void bindThumbnail(final Context context ,final ImageView appIconView) {
+    void bindThumbnail(final Context context ,final ImageView appIconView) {
         // 重複排除
         Object tag = appIconView.getTag();
         if(tag != null && tag.equals(video.id)){
@@ -126,10 +129,8 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
         }).start();
     }
 
-    /**
-     * 画像をsetする
-     */
-    protected void setImage(final ImageView iv, final Bitmap image , boolean animate){
+
+    void setImage(final ImageView iv, final Bitmap image , boolean animate){
         Object tag = iv.getTag();
         if(tag != null && !tag.equals(video.id)){
             return;
@@ -142,7 +143,4 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
             iv.startAnimation(anim);
         }
     }
-
-
-
 }

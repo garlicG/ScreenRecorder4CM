@@ -64,8 +64,10 @@ public class PlateAdapter extends RecyclerView.Adapter{
         //noinspection TryWithIdenticalCatches
         try {
             Plate layout = clazz.newInstance();
-            RecyclerView.ViewHolder vh = layout.onCreateViewHolder(mInflater, viewGroup);
-            bindOnItemClickListener(vh);
+            SwapClickListener listener = new SwapClickListener();
+            RecyclerView.ViewHolder vh = layout.onCreateViewHolder(mInflater, viewGroup , listener);
+            listener.vh = vh;
+
             return vh;
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -86,24 +88,29 @@ public class PlateAdapter extends RecyclerView.Adapter{
         return mItems.size();
     }
 
-    public interface OnItemClickListener{
-        void onItemClick(View v, Plate panel);
+
+    public static abstract class OnPlateClickListener{
+        public abstract void onPlateClick(View v , int position, Plate plate);
     }
 
-    private OnItemClickListener mItemClickListener;
+    private OnPlateClickListener mPlateClickListener;
 
-    public void setOnItemClickListener(OnItemClickListener listener){
-        mItemClickListener = listener;
+    public void setOnPlateClickListener(OnPlateClickListener listener){
+        mPlateClickListener = listener;
     }
 
-    private void bindOnItemClickListener(final RecyclerView.ViewHolder vh){
-        if(mItemClickListener == null)return;
-        vh.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Plate panel = mItems.get(vh.getAdapterPosition());
-                mItemClickListener.onItemClick(v , panel);
+
+    public class SwapClickListener implements View.OnClickListener{
+
+        RecyclerView.ViewHolder vh;
+
+        @Override
+        public void onClick(View v) {
+            if(mPlateClickListener != null && vh != null){
+                int position = vh.getAdapterPosition();
+                Plate plate = mItems.get(position);
+                mPlateClickListener.onPlateClick(v , position ,plate);
             }
-        });
+        }
     }
 }

@@ -21,21 +21,20 @@ package com.garlicg.screenrecordct.plate;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 
-public class Plate <VH extends RecyclerView.ViewHolder>{
+public abstract class Plate <VH extends RecyclerView.ViewHolder>{
 
     protected Plate(){}
 
-    protected VH onCreateViewHolder(LayoutInflater inflater, ViewGroup parent) {
-        return null;
-    }
+    protected abstract VH onCreateViewHolder(LayoutInflater inflater, ViewGroup parent ,View.OnClickListener listener);
 
-    protected void onBind(Context context, VH vh) {
-    }
+    protected abstract void onBind(Context context, VH vh);
 
     protected Handler mHandler;
 

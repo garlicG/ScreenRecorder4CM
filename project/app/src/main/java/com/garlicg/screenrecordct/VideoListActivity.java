@@ -1,10 +1,8 @@
 package com.garlicg.screenrecordct;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -12,18 +10,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.garlicg.screenrecordct.data.AppStorage;
 import com.garlicg.screenrecordct.data.AsyncExecutor;
 import com.garlicg.screenrecordct.data.ContentAccessor;
 import com.garlicg.screenrecordct.plate.Plate;
 import com.garlicg.screenrecordct.plate.PlateAdapter;
-import com.garlicg.screenrecordct.util.Cat;
+import com.garlicg.screenrecordct.util.Toaster;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.garlicg.screenrecordct.plate.PlateAdapter.OnPlateClickListener;
 
 public class VideoListActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback{
@@ -61,7 +62,7 @@ public class VideoListActivity extends AppCompatActivity
     }
 
 
-    private void loadVideoList(@NonNull String dirPath){
+    void loadVideoList(@NonNull String dirPath){
         ContentAccessor ca = new ContentAccessor(this);
         ca.setQuery(VideoModel.PROJECTION
                 , MediaStore.Video.VideoColumns.DATA + " LIKE ?"
@@ -71,7 +72,7 @@ public class VideoListActivity extends AppCompatActivity
     }
 
 
-    private AsyncExecutor.Listener<Cursor> mVideoLoaded = new AsyncExecutor.Listener<Cursor>() {
+    AsyncExecutor.Listener<Cursor> mVideoLoaded = new AsyncExecutor.Listener<Cursor>() {
         @Override
         public void onPostExecute(Cursor c) {
             if(isFinishing()){
@@ -95,8 +96,29 @@ public class VideoListActivity extends AppCompatActivity
     void bindAdapter(List<Plate> list){
         PlateAdapter adapter = new PlateAdapter(this);
         adapter.setItems(list);
+        adapter.setOnPlateClickListener(mPlateClick);
         mRecyclerView.setAdapter(adapter);
     }
+
+
+    OnPlateClickListener mPlateClick = new OnPlateClickListener() {
+        @Override
+        public void onPlateClick(View v, int position, Plate plate) {
+            int id = v.getId();
+
+            if (plate instanceof VideoPlate) {
+                VideoPlate vp = (VideoPlate) plate;
+
+                switch (id){
+                    case VideoPlate.VH.CLICK_THUMBNAIL:
+                        Toaster.show(v.getContext() , "THUMB:" + vp.video.duration);
+
+                    case VideoPlate.VH.CLICK_DELETE:
+                        Toaster.show(v.getContext() , "DELETE"+ vp.video.duration);
+                }
+            }
+        }
+    };
 
 
 
