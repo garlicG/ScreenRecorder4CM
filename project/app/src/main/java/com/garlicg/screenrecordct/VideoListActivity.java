@@ -157,20 +157,47 @@ public class VideoListActivity extends AppCompatActivity
 
             // サムネクリックで動画ViewIntent
             if(VideoPlate.VH.CLICK_THUMBNAIL == id){
-                Uri uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI , vp.video.id);
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(uri , "video/*");
-                try {
-                    startActivity(intent);
-                }catch (ActivityNotFoundException e){
-                    e.printStackTrace();
-                    Cat.sendE(e);
-                }
+                startViewVideo(vp);
             }
             // 削除
             else if(VideoPlate.VH.CLICK_DELETE == id){
-                // TODO
+                startDeleteVideo(vp);
             }
         }
     };
+
+
+    void startViewVideo(VideoPlate vp){
+        Uri uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI , vp.video.id);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri , "video/*");
+        try {
+            startActivity(intent);
+        }catch (ActivityNotFoundException e){
+            e.printStackTrace();
+            Cat.sendE(e);
+        }
+    }
+
+
+    private boolean mDeleting = false;
+
+    void startDeleteVideo(final VideoPlate vp){
+        if(mDeleting)return;
+        mDeleting = true;
+
+        Uri uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI , vp.video.id);
+        ContentAccessor ca = new ContentAccessor(this);
+        ca.setDeleteItem(uri);
+        ca.startDeleteItem(new AsyncExecutor.Listener<Integer>() {
+            @Override
+            public void onPostExecute(Integer integer) {
+                if(integer == 0)return;
+                if(isFinishing())return;
+                PlateAdapter adapter = (PlateAdapter) mRecyclerView.getAdapter();
+                adapter.removeItem(vp);
+                mDeleting = false;
+            }
+        });
+    }
 }

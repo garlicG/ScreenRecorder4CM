@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlateAdapter extends RecyclerView.Adapter{
@@ -45,6 +46,14 @@ public class PlateAdapter extends RecyclerView.Adapter{
     public void setItems(List<Plate> items){
         mItems = items;
     }
+
+
+    public void removeItem(Plate plate){
+        int position = mItems.indexOf(plate);
+        mItems.remove(position);
+        notifyItemRemoved(position);
+    }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -108,6 +117,8 @@ public class PlateAdapter extends RecyclerView.Adapter{
         public void onClick(View v) {
             if(mPlateClickListener != null && vh != null){
                 int position = vh.getAdapterPosition();
+                if(position == -1)return;
+
                 Plate plate = mItems.get(position);
                 mPlateClickListener.onPlateClick(v , position ,plate);
             }
