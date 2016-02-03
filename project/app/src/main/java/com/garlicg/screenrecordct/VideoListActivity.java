@@ -1,8 +1,14 @@
 package com.garlicg.screenrecordct;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
+import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -19,8 +25,8 @@ import com.garlicg.screenrecordct.data.AsyncExecutor;
 import com.garlicg.screenrecordct.data.ContentAccessor;
 import com.garlicg.screenrecordct.plate.Plate;
 import com.garlicg.screenrecordct.plate.PlateAdapter;
+import com.garlicg.screenrecordct.util.Cat;
 import com.garlicg.screenrecordct.util.DisplayUtils;
-import com.garlicg.screenrecordct.util.Toaster;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
 import java.io.File;
@@ -86,7 +92,6 @@ public class VideoListActivity extends AppCompatActivity
             }
             outRect.bottom = mVerticalSpace;
             outRect.left = mHorizontalSpace;
-            outRect.right = mHorizontalSpace;
         }
     }
 
@@ -145,22 +150,27 @@ public class VideoListActivity extends AppCompatActivity
     OnPlateClickListener mPlateClick = new OnPlateClickListener() {
         @Override
         public void onPlateClick(View v, int position, Plate plate) {
+            if(!(plate instanceof VideoPlate))return;
+
             int id = v.getId();
+            VideoPlate vp = (VideoPlate) plate;
 
-            if (plate instanceof VideoPlate) {
-                VideoPlate vp = (VideoPlate) plate;
-
-                switch (id){
-                    case VideoPlate.VH.CLICK_THUMBNAIL:
-                        Toaster.show(v.getContext() , "THUMB:" + vp.video.duration);
-
-                    case VideoPlate.VH.CLICK_DELETE:
-                        Toaster.show(v.getContext() , "DELETE"+ vp.video.duration);
+            // サムネクリックで動画ViewIntent
+            if(VideoPlate.VH.CLICK_THUMBNAIL == id){
+                Uri uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI , vp.video.id);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri , "video/*");
+                try {
+                    startActivity(intent);
+                }catch (ActivityNotFoundException e){
+                    e.printStackTrace();
+                    Cat.sendE(e);
                 }
+            }
+            // 削除
+            else if(VideoPlate.VH.CLICK_DELETE == id){
+                // TODO
             }
         }
     };
-
-
-
 }

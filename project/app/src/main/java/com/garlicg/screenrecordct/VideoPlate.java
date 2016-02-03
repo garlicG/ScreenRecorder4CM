@@ -34,9 +34,10 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
 
 
     public static class VH extends RecyclerView.ViewHolder{
-        public static final int CLICK_THUMBNAIL = R.id.thumbnail;
+        public static final int CLICK_THUMBNAIL = R.id.thumbnailFrame;
         public static final int CLICK_DELETE = R.id.delete;
 
+        final View thumbnailFrame;
         final ImageView thumbnail;
         final View delete;
         final TextView title;
@@ -48,8 +49,9 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
         public VH(View itemView, View.OnClickListener listener) {
             super(itemView);
 
+            thumbnailFrame = ViewFinder.byId(itemView , R.id.thumbnailFrame);
+            thumbnailFrame.setOnClickListener(listener);
             thumbnail = ViewFinder.byId(itemView , R.id.thumbnail);
-            thumbnail.setOnClickListener(listener);
             title = ViewFinder.byId(itemView , R.id.title);
             duration = ViewFinder.byId(itemView , R.id.duration);
             size = ViewFinder.byId(itemView , R.id.size);
