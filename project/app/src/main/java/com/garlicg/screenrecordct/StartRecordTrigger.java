@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.garlicg.cutin.triggerextension.TriggerSetting;
+import com.garlicg.screenrecordct.data.AppPrefs;
 
 public class StartRecordTrigger implements TriggerSetting {
 

@@ -1,8 +1,11 @@
-package com.garlicg.screenrecordct;
+package com.garlicg.screenrecordct.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import com.garlicg.screenrecordct.R;
+import com.garlicg.screenrecordct.VideoPercentage;
 
 public class AppPrefs {
 

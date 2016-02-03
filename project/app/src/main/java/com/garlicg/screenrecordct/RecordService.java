@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 
 import com.garlicg.cutin.triggerextension.FireIntentBuilder;
+import com.garlicg.screenrecordct.data.AppPrefs;
 import com.garlicg.screenrecordct.util.Cat;
 
 /**

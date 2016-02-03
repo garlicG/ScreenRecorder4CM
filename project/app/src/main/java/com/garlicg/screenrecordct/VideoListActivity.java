@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.garlicg.screenrecordct.data.Storage;
 import com.garlicg.screenrecordct.plate.Plate;
 import com.garlicg.screenrecordct.plate.PlateAdapter;
 import com.garlicg.screenrecordct.util.Cat;
@@ -53,6 +54,8 @@ public class VideoListActivity extends AppCompatActivity
                 MediaStore.Video.VideoColumns.WIDTH,
                 MediaStore.Video.VideoColumns.HEIGHT,
         };
+//        ThumbnailUtils.createVideoThumbnail()  // 毎回つくってるくさいが自分でファイルキャッシュ用意する？
+//        MediaStore.Video.Thumbnails.getThumbnail()
 
         ContentResolver cr = getContentResolver();
         Cursor c = cr.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI

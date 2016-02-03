@@ -23,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.garlicg.cutin.triggerextension.ResultBundleBuilder;
+import com.garlicg.screenrecordct.data.AppPrefs;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;

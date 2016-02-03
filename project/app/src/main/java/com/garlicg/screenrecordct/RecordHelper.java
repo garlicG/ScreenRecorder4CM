@@ -16,6 +16,7 @@ import android.util.DisplayMetrics;
 import android.view.Surface;
 import android.view.WindowManager;
 
+import com.garlicg.screenrecordct.data.Storage;
 import com.garlicg.screenrecordct.util.Cat;
 import com.garlicg.screenrecordct.util.DisplayUtils;
 

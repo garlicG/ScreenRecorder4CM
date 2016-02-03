@@ -1,4 +1,4 @@
-package com.garlicg.screenrecordct;
+package com.garlicg.screenrecordct.data;
 
 import android.os.Environment;
 import android.support.annotation.Nullable;
