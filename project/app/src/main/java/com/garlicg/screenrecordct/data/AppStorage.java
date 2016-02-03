@@ -5,15 +5,15 @@ import android.support.annotation.Nullable;
 
 import java.io.File;
 
-public class Storage {
+public class AppStorage {
 
     private static final String DIRECTORY_NAME = "ScreenRecorderCT";
 
-    public static @Nullable File dir(){
+    public static @Nullable File videoDir(){
         File parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-        File appDir = new File(parent ,DIRECTORY_NAME);
-        if(appDir.mkdirs() || appDir.isDirectory()){
-            return appDir;
+        File dir = new File(parent ,DIRECTORY_NAME);
+        if(dir.mkdirs() || dir.isDirectory()){
+            return dir;
         }
         return null;
     }

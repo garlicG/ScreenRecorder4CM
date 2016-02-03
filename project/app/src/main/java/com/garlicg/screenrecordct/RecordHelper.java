@@ -16,7 +16,7 @@ import android.util.DisplayMetrics;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.garlicg.screenrecordct.data.Storage;
+import com.garlicg.screenrecordct.data.AppStorage;
 import com.garlicg.screenrecordct.util.Cat;
 import com.garlicg.screenrecordct.util.DisplayUtils;
 
@@ -76,7 +76,7 @@ public class RecordHelper {
             return false;
         }
 
-        if (Storage.dir() == null) {
+        if (AppStorage.videoDir() == null) {
             Cat.e("Can not access output directory");
             return false;
         }
@@ -107,7 +107,7 @@ public class RecordHelper {
         mMediaRecorder.setVideoEncodingBitRate(8 * 1000 * 1000);
 
         String outputName = FILE_FORMAT.format(new Date());
-        mOutputFilePath = new File(Storage.dir(), outputName).getAbsolutePath();
+        mOutputFilePath = new File(AppStorage.videoDir(), outputName).getAbsolutePath();
         mMediaRecorder.setOutputFile(mOutputFilePath);
 
         try {

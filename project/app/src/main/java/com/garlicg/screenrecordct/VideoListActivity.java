@@ -10,7 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import com.garlicg.screenrecordct.data.Storage;
+import com.garlicg.screenrecordct.data.AppStorage;
 import com.garlicg.screenrecordct.plate.Plate;
 import com.garlicg.screenrecordct.plate.PlateAdapter;
 import com.garlicg.screenrecordct.util.Cat;
@@ -61,7 +61,7 @@ public class VideoListActivity extends AppCompatActivity
         Cursor c = cr.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI
                 ,projection
                 ,MediaStore.Video.VideoColumns.DATA + " LIKE ?"
-                ,new String[]{Storage.dir().toString() + "/%"}
+                ,new String[]{AppStorage.videoDir().toString() + "/%"}
                 ,null
                 );
 
