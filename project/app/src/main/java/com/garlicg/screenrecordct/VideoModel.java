@@ -11,6 +11,7 @@ public class VideoModel {
     public long size;
     public int width;
     public int height;
+    public String data;
 
 
     public static final String[] PROJECTION = new String[]{
@@ -20,6 +21,7 @@ public class VideoModel {
             MediaStore.Video.VideoColumns.SIZE,
             MediaStore.Video.VideoColumns.WIDTH,
             MediaStore.Video.VideoColumns.HEIGHT,
+            MediaStore.Video.VideoColumns.DATA,
     };
 
 
@@ -31,6 +33,7 @@ public class VideoModel {
         model.size = c.getLong(3);
         model.width = c.getInt(4);
         model.height = c.getInt(5);
+        model.data = c.getString(6);
         return model;
     }
 

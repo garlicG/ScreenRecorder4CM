@@ -11,7 +11,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="#f0f"
+        android:background="#33000000"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher" />
 

@@ -3,6 +3,8 @@ package com.garlicg.screenrecordct;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -27,10 +29,13 @@ public class VideoListActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     private RecyclerView mRecyclerView;
+    private Handler mSubHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mSubHandler = new Handler(getMainLooper());
 
         setContentView(R.layout.activity_videolist);
 
@@ -49,7 +54,7 @@ public class VideoListActivity extends AppCompatActivity
         // 書き込み許可ないときはディレクトリを作成できない
         // 初回起動時でこの画面に遷移したときによくあるケースと想定される
         // ディレクトリ作成できない場合はユースケース的にアイテムなしでOK
-        File videoDir = AppStorage.videoDir();
+        File videoDir = AppStorage.Video.dir();
         if(videoDir != null){
             loadVideoList(videoDir.toString());
         }
@@ -78,7 +83,7 @@ public class VideoListActivity extends AppCompatActivity
             if(c != null){
                 while (c.moveToNext()){
                     VideoModel model = VideoModel.from(c);
-                    list.add(VideoPlate.newInstance(model));
+                    list.add(VideoPlate.newInstance(model , mSubHandler));
                 }
                 c.close();
             }

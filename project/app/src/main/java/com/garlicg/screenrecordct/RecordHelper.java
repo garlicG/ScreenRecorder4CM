@@ -76,7 +76,7 @@ public class RecordHelper {
             return false;
         }
 
-        if (AppStorage.videoDir() == null) {
+        if (AppStorage.Video.dir() == null) {
             Cat.e("Can not access output directory");
             return false;
         }
@@ -107,7 +107,7 @@ public class RecordHelper {
         mMediaRecorder.setVideoEncodingBitRate(8 * 1000 * 1000);
 
         String outputName = FILE_FORMAT.format(new Date());
-        mOutputFilePath = new File(AppStorage.videoDir(), outputName).getAbsolutePath();
+        mOutputFilePath = new File(AppStorage.Video.dir(), outputName).getAbsolutePath();
         mMediaRecorder.setOutputFile(mOutputFilePath);
 
         try {

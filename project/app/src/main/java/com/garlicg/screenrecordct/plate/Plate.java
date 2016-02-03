@@ -20,9 +20,11 @@
 package com.garlicg.screenrecordct.plate;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 
 public class Plate <VH extends RecyclerView.ViewHolder>{
 
@@ -33,6 +35,16 @@ public class Plate <VH extends RecyclerView.ViewHolder>{
     }
 
     protected void onBind(Context context, VH vh) {
+    }
+
+    protected Handler mHandler;
+
+    public void setHandler(Handler handler){
+        mHandler = handler;
+    }
+
+    public Handler getHandler(){
+        return mHandler;
     }
 
 }
