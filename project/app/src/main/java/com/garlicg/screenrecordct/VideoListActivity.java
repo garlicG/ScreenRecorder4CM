@@ -1,6 +1,8 @@
 package com.garlicg.screenrecordct;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -17,6 +19,7 @@ import com.garlicg.screenrecordct.data.AsyncExecutor;
 import com.garlicg.screenrecordct.data.ContentAccessor;
 import com.garlicg.screenrecordct.plate.Plate;
 import com.garlicg.screenrecordct.plate.PlateAdapter;
+import com.garlicg.screenrecordct.util.DisplayUtils;
 import com.garlicg.screenrecordct.util.Toaster;
 import com.garlicg.screenrecordct.util.ViewFinder;
 
@@ -49,6 +52,7 @@ public class VideoListActivity extends AppCompatActivity
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(this , LinearLayoutManager.VERTICAL , false);
         recyclerView.setLayoutManager(lm);
+        recyclerView.addItemDecoration(new Decoration(this));
         mRecyclerView = recyclerView;
 
 
@@ -62,6 +66,34 @@ public class VideoListActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Decoration for RecyclerView
+     */
+    static class Decoration extends RecyclerView.ItemDecoration{
+
+        final int mVerticalSpace;
+        final int mHorizontalSpace;
+
+        public Decoration(Context context){
+            mVerticalSpace = DisplayUtils.dpToPx(context.getResources() , 8);
+            mHorizontalSpace = mVerticalSpace;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            if(parent.getChildAdapterPosition(view) == 0){
+                outRect.top = mVerticalSpace;
+            }
+            outRect.bottom = mVerticalSpace;
+            outRect.left = mHorizontalSpace;
+            outRect.right = mHorizontalSpace;
+        }
+    }
+
+
+    /**
+     * 動画一覧を読み込む
+     */
     void loadVideoList(@NonNull String dirPath){
         ContentAccessor ca = new ContentAccessor(this);
         ca.setQuery(VideoModel.PROJECTION
@@ -72,6 +104,9 @@ public class VideoListActivity extends AppCompatActivity
     }
 
 
+    /**
+     * 動画一覧読み込みのコールバック
+     */
     AsyncExecutor.Listener<Cursor> mVideoLoaded = new AsyncExecutor.Listener<Cursor>() {
         @Override
         public void onPostExecute(Cursor c) {
@@ -93,6 +128,9 @@ public class VideoListActivity extends AppCompatActivity
     };
 
 
+    /**
+     * Adapterをセットする
+     */
     void bindAdapter(List<Plate> list){
         PlateAdapter adapter = new PlateAdapter(this);
         adapter.setItems(list);
@@ -101,6 +139,9 @@ public class VideoListActivity extends AppCompatActivity
     }
 
 
+    /**
+     * アイテムのクリック
+     */
     OnPlateClickListener mPlateClick = new OnPlateClickListener() {
         @Override
         public void onPlateClick(View v, int position, Plate plate) {
