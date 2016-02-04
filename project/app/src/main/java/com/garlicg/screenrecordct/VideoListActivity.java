@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -161,7 +163,7 @@ public class VideoListActivity extends AppCompatActivity
             }
             // 削除
             else if(VideoPlate.VH.CLICK_DELETE == id){
-                startDeleteVideo(vp);
+                showDeleteConfirmation(vp);
             }
         }
     };
@@ -177,6 +179,20 @@ public class VideoListActivity extends AppCompatActivity
             e.printStackTrace();
             Cat.sendE(e);
         }
+    }
+
+
+    void showDeleteConfirmation(final VideoPlate vp){
+        AlertDialog.Builder ab = new AlertDialog.Builder(this , R.style.DarkAlertDialogStyle);
+        ab.setMessage(R.string.message_confirm_delete);
+        ab.setNegativeButton(android.R.string.cancel, null);
+        ab.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startDeleteVideo(vp);
+            }
+        });
+        ab.create().show();
     }
 
 

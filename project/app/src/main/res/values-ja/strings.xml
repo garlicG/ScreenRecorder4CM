@@ -6,6 +6,7 @@
     <string name="launch">起動</string>
     <string name="settings">設定</string>
     <string name="video_list">動画一覧</string>
+    <string name="delete">削除</string>
 
     <!-- setting specific -->
     <string name="video_size">ビデオサイズ</string>
@@ -29,6 +30,7 @@
     <!-- messages -->
     <string name="message_reason_record_storage">動画を撮影保存するためにストレージへの書き込み許可が必要です。</string>
     <string name="message_reason_delete_video">削除するためにストレージへの書き込み許可が必要です。</string>
+    <string name="message_confirm_delete">本当に削除してよろしいですか？</string>
 
 
 
