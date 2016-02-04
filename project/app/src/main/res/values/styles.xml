@@ -18,8 +18,12 @@
     <style name="DarkTheme" parent="Theme.AppCompat">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="colorAccent">#f0f</item>
+        <item name="colorAccent">@color/appYellow</item>
         <item name="colorPrimary">@color/appRed</item>
+    </style>
+
+    <style name="DarkAlertDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/appYellow</item>
     </style>
 
 
