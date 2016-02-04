@@ -33,7 +33,8 @@ public class SettingsActivity extends AppCompatActivity
 
     private static final int REQUEST_CAPTURE = 1;
     private static final int REQUEST_STICKY_CAPTURE = 2;
-    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 3;
+    private static final int REQUEST_STORAGE_PERMISSION_FOR_RECORD = 3;
+    private static final int REQUEST_STORAGE_PERMISSION_FOR_VIDEO_LIST = 4;
 
     private AppPrefs mPrefs;
 
@@ -86,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity
                 tryRecordService();
             }
         });
-        launchButton.setVisibility(mSticky && isGrantedPermission(WRITE_EXTERNAL_STORAGE)
+        launchButton.setVisibility(mSticky && isGrantedStoragePermission()
                 ? View.GONE
                 : View.VISIBLE);
 
@@ -109,7 +110,7 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if(mSticky && isGrantedPermission(WRITE_EXTERNAL_STORAGE)){
+        if(mSticky && isGrantedStoragePermission()){
             requestCapture(REQUEST_STICKY_CAPTURE);
         }
         else{
@@ -238,8 +239,8 @@ public class SettingsActivity extends AppCompatActivity
         final TextView valueView = ViewFinder.byId(this, R.id.autoStopValue);
         int value = mPrefs.getAutoStopMilliSec();
         valueView.setText(value == 0
-                 ? getString(R.string.no_seconds_only_manual_stop)
-                 : getString(R.string.plus_x_ms_later, value)
+                        ? getString(R.string.no_seconds_only_manual_stop)
+                        : getString(R.string.plus_x_ms_later, value)
         );
 
         // handle value from dialog callback
@@ -364,13 +365,16 @@ public class SettingsActivity extends AppCompatActivity
         touchFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingsActivity.this, VideoListActivity.class);
-                startActivity(intent);
+                if(isGrantedStoragePermission()){
+                    startVideoListActivity();
+                }else{
+                    requestStoragePermission(REQUEST_STORAGE_PERMISSION_FOR_VIDEO_LIST);
+                }
             }
         });
 
         // init count
-        TextView titleView = ViewFinder.byId(this , R.id.videoListTitle);
+        TextView titleView = ViewFinder.byId(this, R.id.videoListTitle);
         titleView.setText(getString(R.string.video_list_x, 0));
     }
 
@@ -390,58 +394,92 @@ public class SettingsActivity extends AppCompatActivity
      * -> start RecordService
      */
     private void tryRecordService() {
-        final String permission = WRITE_EXTERNAL_STORAGE;
-        final int requestCode = REQUEST_WRITE_EXTERNAL_STORAGE;
-
-        if (isGrantedPermission(permission)) {
+        if (isGrantedStoragePermission()) {
             requestCapture(REQUEST_CAPTURE);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-        }
-    }
-
-    boolean isGrantedPermission(String permission) {
-        return ContextCompat.checkSelfPermission(this, permission)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
-
-            // cancel
-            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
-
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)) {
-                    AlertDialog.Builder ab = new AlertDialog.Builder(this);
-                    ab.setMessage(getString(R.string.message_reason_record_storage));
-                    ab.setPositiveButton(getString(R.string.settings), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri uri = Uri.fromParts("package", getPackageName(), null);
-                            intent.setData(uri);
-                            startActivity(intent);
-                        }
-                    });
-                    ab.create().show();
-                }
-
-                return;
-            }
-
-            // next step
-            requestCapture(REQUEST_CAPTURE);
+            requestStoragePermission(REQUEST_STORAGE_PERMISSION_FOR_RECORD);
         }
     }
 
 
+    /**
+     * 録画サービスを開始する
+     */
     void requestCapture(int requestCode) {
         MediaProjectionManager mm = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
         Intent intent = mm.createScreenCaptureIntent();
         startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * 動画一覧Activityを表示する
+     */
+    void startVideoListActivity(){
+        Intent intent = new Intent(SettingsActivity.this, VideoListActivity.class);
+        startActivity(intent);
+    }
+
+
+    /**
+     * ストレージ権限をリクエストする
+     */
+    void requestStoragePermission(int requestCode){
+        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, requestCode);
+    }
+
+
+    /**
+     * ストレージ権限があるか
+     */
+    boolean isGrantedStoragePermission(){
+        return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // 許可されなかった
+        if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            // 理由を表示するパターンのとき
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)) {
+                String message = requestCode == REQUEST_STORAGE_PERMISSION_FOR_RECORD
+                        ? getString(R.string.message_reason_record_storage)
+                        : getString(R.string.message_reason_view_videolist);
+                showPermissionRationale(message);
+            }
+            return;
+        }
+
+        // next step
+        if(requestCode == REQUEST_STORAGE_PERMISSION_FOR_RECORD){
+            requestCapture(REQUEST_CAPTURE);
+        }
+        else if(requestCode == REQUEST_STORAGE_PERMISSION_FOR_VIDEO_LIST){
+            startVideoListActivity();
+        }
+
+    }
+
+
+    /**
+     * 権限理由を説明して設定に飛ばすダイアログを表示する
+     */
+    private void showPermissionRationale(String reason){
+        AlertDialog.Builder ab = new AlertDialog.Builder(this);
+        ab.setMessage(reason);
+        ab.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        });
+        ab.create().show();
+    }
 }
