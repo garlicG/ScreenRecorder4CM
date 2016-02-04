@@ -26,12 +26,9 @@
     <string name="x_ms_later">%1$d ミリ秒後</string>
     <string name="plus_x_ms_later">+ %1$d ミリ秒後</string>
 
-
     <!-- messages -->
-    <string name="message_reason_record_storage">動画を撮影保存するためにストレージへの書き込み許可が必要です。</string>
-    <string name="message_reason_delete_video">削除するためにストレージへの書き込み許可が必要です。</string>
+    <string name="message_reason_record_storage">動画を撮影保存するためにストレージの許可が必要です。</string>
+    <string name="message_reason_view_videolist">動画一覧を表示するためにストレージの許可が必要です。</string>
     <string name="message_confirm_delete">本当に削除してよろしいですか？</string>
-
-
 
 </resources>

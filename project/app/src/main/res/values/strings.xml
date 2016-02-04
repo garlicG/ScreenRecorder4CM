@@ -28,7 +28,7 @@
 
     <!-- messages -->
     <string name="message_reason_record_storage">Storage permission is required to save the record.</string>
-    <string name="message_reason_delete_video">Storage permission is required for deleting.</string>
+    <string name="message_reason_view_videolist">Storage permission is required to show video list.</string>
     <string name="message_confirm_delete">Are you sure you want to delete this item?</string>
 
 </resources>
