@@ -7,6 +7,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,10 +37,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.garlicg.screenrecordct.plate.PlateAdapter.OnPlateClickListener;
 
-public class VideoListActivity extends AppCompatActivity
-        implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class VideoListActivity extends AppCompatActivity{
 
     private RecyclerView mRecyclerView;
     private Handler mSubHandler;
@@ -64,11 +66,11 @@ public class VideoListActivity extends AppCompatActivity
         mRecyclerView = recyclerView;
 
 
-        // 書き込み許可ないときはディレクトリを作成できない
-        // 初回起動時でこの画面に遷移したときによくあるケースと想定される
-        // ディレクトリ作成できない場合はユースケース的にアイテムなしでOK
+
+        // 遷移元のSettingsActivityで、このActivity遷移前に権限リクエストがある
+        // このActivityでストレージ権限がない場合はリクエストしない
         File videoDir = AppStorage.Video.dir();
-        if(videoDir != null){
+        if(videoDir != null && isGrantedStoragePermission()){
             loadVideoList(videoDir.toString());
         }
     }
@@ -163,12 +165,16 @@ public class VideoListActivity extends AppCompatActivity
             }
             // 削除
             else if(VideoPlate.VH.CLICK_DELETE == id){
+                if(!isGrantedStoragePermission())return;
                 showDeleteConfirmation(vp);
             }
         }
     };
 
 
+    /**
+     * 動画表示の暗黙的Intentを投げる
+     */
     void startViewVideo(VideoPlate vp){
         Uri uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI , vp.video.id);
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -182,6 +188,9 @@ public class VideoListActivity extends AppCompatActivity
     }
 
 
+    /**
+     * 削除確認ダイアログを表示する
+     */
     void showDeleteConfirmation(final VideoPlate vp){
         AlertDialog.Builder ab = new AlertDialog.Builder(this , R.style.DarkAlertDialogStyle);
         ab.setMessage(R.string.message_confirm_delete);
@@ -198,6 +207,9 @@ public class VideoListActivity extends AppCompatActivity
 
     private boolean mDeleting = false;
 
+    /**
+     * 動画削除を開始する
+     */
     void startDeleteVideo(final VideoPlate vp){
         if(mDeleting)return;
         mDeleting = true;
@@ -215,5 +227,16 @@ public class VideoListActivity extends AppCompatActivity
                 mDeleting = false;
             }
         });
+    }
+
+
+
+
+    /**
+     * ストレージ権限があるか
+     */
+    boolean isGrantedStoragePermission(){
+        return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
     }
 }
