@@ -3,9 +3,11 @@ package com.garlicg.screenrecordct;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -24,7 +26,12 @@ import android.widget.TextView;
 
 import com.garlicg.cutin.triggerextension.ResultBundleBuilder;
 import com.garlicg.screenrecordct.data.AppPrefs;
+import com.garlicg.screenrecordct.data.AppStorage;
+import com.garlicg.screenrecordct.data.AsyncExecutor;
+import com.garlicg.screenrecordct.data.ContentAccessor;
 import com.garlicg.screenrecordct.util.ViewFinder;
+
+import java.io.File;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -365,9 +372,9 @@ public class SettingsActivity extends AppCompatActivity
         touchFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isGrantedStoragePermission()){
+                if (isGrantedStoragePermission()) {
                     startVideoListActivity();
-                }else{
+                } else {
                     requestStoragePermission(REQUEST_STORAGE_PERMISSION_FOR_VIDEO_LIST);
                 }
             }
@@ -378,11 +385,37 @@ public class SettingsActivity extends AppCompatActivity
         titleView.setText(getString(R.string.video_list_x, 0));
     }
 
+
+    /**
+     * 動画数表示を更新する
+     */
     private void invalidateVideoCount(){
-        // TODO 動画数を非同期で取得する
-        int videoNum = 9;
-        TextView titleView = ViewFinder.byId(this , R.id.videoListTitle);
-        titleView.setText(getString(R.string.video_list_x, videoNum));
+        final TextView titleView = ViewFinder.byId(this , R.id.videoListTitle);
+        titleView.setText(getString(R.string.video_list));
+
+        // アクセスできる場合のみカウントを取得
+        File videoDir = AppStorage.Video.dir();
+        if(videoDir != null && isGrantedStoragePermission()){
+
+            ContentAccessor ca = new ContentAccessor(this);
+            ca.setQuery(new String[]{MediaStore.Video.VideoColumns._ID}
+                    , MediaStore.Video.VideoColumns.DATA + " LIKE ?"
+                    , new String[]{videoDir + "/%"}
+                    , null);
+
+            ca.startQuery(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, new AsyncExecutor.Listener<Cursor>() {
+                @Override
+                public void onPostExecute(final Cursor c) {
+                    int videoNum = 0;
+                    if(c != null){
+                        videoNum = c.getCount();
+                        c.close();
+                    }
+                    if(isFinishing())return;
+                    titleView.setText(getString(R.string.video_list_x, videoNum));
+                }
+            });
+        }
     }
 
 
