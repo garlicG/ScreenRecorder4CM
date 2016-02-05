@@ -40,7 +40,8 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
         final View thumbnailFrame;
         final ImageView thumbnail;
         final View delete;
-        final TextView title;
+        final TextView addedDay;
+        final TextView addedTime;
         final TextView duration;
         final TextView size;
         final TextView wh;
@@ -52,7 +53,8 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
             thumbnailFrame = ViewFinder.byId(itemView , R.id.thumbnailFrame);
             thumbnailFrame.setOnClickListener(listener);
             thumbnail = ViewFinder.byId(itemView , R.id.thumbnail);
-            title = ViewFinder.byId(itemView , R.id.title);
+            addedDay = ViewFinder.byId(itemView , R.id.addedDay);
+            addedTime = ViewFinder.byId(itemView , R.id.addedTime);
             duration = ViewFinder.byId(itemView , R.id.duration);
             size = ViewFinder.byId(itemView , R.id.size);
             wh = ViewFinder.byId(itemView , R.id.wh);
@@ -60,7 +62,6 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
             delete.setOnClickListener(listener);
         }
     }
-
 
 
     @Override
@@ -76,11 +77,11 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
     @Override
     protected void onBind(Context context, VH vh) {
 
-        String added = DateFormat.getDateFormat(context).format(new Date(video.dataAdded * 1000));
-        vh.title.setText("" + added);
-        vh.duration.setText("" + video.duration);
-        vh.size.setText("" + video.size);
-        vh.wh.setText("w" + video.width + "x h" + video.height);
+        vh.addedDay.setText(video.getDataAddedDay(context));
+        vh.addedTime.setText(video.getDataAddedTime(context));
+        vh.duration.setText(video.getDurationText(context));
+        vh.size.setText(video.getSizeText());
+        vh.wh.setText(video.getWidthHeightText());
 
         bindThumbnail(context, vh.thumbnail);
     }

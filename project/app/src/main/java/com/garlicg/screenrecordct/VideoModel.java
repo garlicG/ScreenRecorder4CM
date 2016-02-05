@@ -1,7 +1,15 @@
 package com.garlicg.screenrecordct;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.text.format.DateFormat;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.xml.datatype.Duration;
 
 public class VideoModel {
 
@@ -36,5 +44,81 @@ public class VideoModel {
         model.data = c.getString(6);
         return model;
     }
+
+
+    private String mDataAddedDayText;
+
+    /**
+     * 追加日のテキストを取得する
+     */
+    public String getDataAddedDay(Context context){
+        if(mDataAddedDayText == null){
+            mDataAddedDayText = DateFormat.getDateFormat(context).format(new Date(dataAdded * 1000));
+        }
+        return mDataAddedDayText;
+    }
+
+
+    private String mDataAddedTimeText;
+
+    /**
+     * 追加時間のテキストを取得する
+     */
+    public String getDataAddedTime(Context context){
+        if(mDataAddedTimeText == null){
+            SimpleDateFormat sdf = new SimpleDateFormat("E H:MM" , Locale.ENGLISH);
+            mDataAddedTimeText = sdf.format(new Date(dataAdded * 1000));
+        }
+        return mDataAddedTimeText;
+    }
+
+
+    private String mDurationText;
+
+    /**
+     * 動画時間のテキストを取得する
+     */
+    public String getDurationText(Context context){
+        if(mDurationText == null){
+            long s = duration / 1000;
+            mDurationText = String.format("%02d:%02d", (s % 3600) / 60, (s % 60));
+        }
+        return mDurationText;
+    }
+
+
+    private String mSizeText;
+
+    /**
+     * 動画サイズのテキストを取得する
+     */
+    public String getSizeText(){
+        if(mSizeText == null){
+            // http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
+            int unit = 1024;
+            if (size < unit) return size + " B";
+            int exp = (int) (Math.log(size) / Math.log(unit));
+            char pre = ("KMGTPE").charAt(exp - 1);
+            mSizeText = String.format("%.1f %sB", size / Math.pow(unit, exp), pre);
+        }
+        return mSizeText;
+    }
+
+
+    private String mWidthHeightText;
+
+    /**
+     * 横×高さのテキストを取得する
+     */
+    public String getWidthHeightText(){
+        if(mWidthHeightText == null){
+            mWidthHeightText = Integer.toString(width) + " x " + height;
+        }
+        return mWidthHeightText;
+    }
+
+
+
+
 
 }

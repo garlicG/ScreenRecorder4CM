@@ -22,6 +22,7 @@
     <string name="video_list_x">Video list (%1$d)</string>
 
     <!-- unit -->
+    <string name="unit_sec">sec</string>
     <string name="unit_00ms_later">00 ms later</string>
     <string name="x_ms_later">%1$d ms later</string>
     <string name="plus_x_ms_later">+ %1$d ms later</string>

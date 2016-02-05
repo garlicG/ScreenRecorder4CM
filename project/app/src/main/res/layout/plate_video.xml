@@ -36,30 +36,41 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/addedDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2016_0605_2525"
+                android:text="2016/02/04"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/duration"
+                android:id="@+id/addedTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="00:04" />
+                android:text="Wed 23:42"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1.5MB" />
 
             <TextView
                 android:id="@+id/wh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1024x512" />
+                android:paddingTop="4dp"
+                android:text="1024 x 512" />
+
+            <TextView
+                android:id="@+id/size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1.5 MB" />
+
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="00:02" />
+
+
         </LinearLayout>
 
         <ImageView

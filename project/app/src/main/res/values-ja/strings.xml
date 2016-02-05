@@ -22,6 +22,7 @@
     <string name="video_list_x">動画一覧 (%1$d)</string>
 
     <!-- unit -->
+    <string name="unit_sec">秒</string>
     <string name="unit_00ms_later">00 ミリ秒後</string>
     <string name="x_ms_later">%1$d ミリ秒後</string>
     <string name="plus_x_ms_later">+ %1$d ミリ秒後</string>
