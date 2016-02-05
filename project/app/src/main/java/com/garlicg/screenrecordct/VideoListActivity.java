@@ -1,7 +1,5 @@
 package com.garlicg.screenrecordct;
 
-import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.Context;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,7 +61,6 @@ public class VideoListActivity extends AppCompatActivity{
         recyclerView.setLayoutManager(lm);
         recyclerView.addItemDecoration(new Decoration(this));
         mRecyclerView = recyclerView;
-
 
 
         // 遷移元のSettingsActivityで、このActivity遷移前に権限リクエストがある
@@ -228,8 +224,6 @@ public class VideoListActivity extends AppCompatActivity{
             }
         });
     }
-
-
 
 
     /**
