@@ -96,32 +96,20 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
 
         // タグ付け
         appIconView.setTag(video.id);
-        Bitmap bitmap = ThumbCache.getInstance().get(video.id);
+        Bitmap bitmap = AppStorage.Thumbnail.getThumbFromMem(video.id);
         if(bitmap != null){
             appIconView.setImageBitmap(bitmap);
             return;
         }
 
-        // clear
+        // loading(clear)
         appIconView.setImageBitmap(null);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                Bitmap thumb = AppStorage.Thumbnail.getThumb(context, video.id, null);
-                if(thumb != null){
-                    ThumbCache.getInstance().put(video.id, thumb);
-                }
-                else{
-                    thumb = ThumbnailUtils.createVideoThumbnail(video.data, MediaStore.Video.Thumbnails.MINI_KIND);
-                    if(thumb != null){
-                        AppStorage.Thumbnail.saveThumb(context ,video.id , thumb);
-                        ThumbCache.getInstance().put(video.id, thumb);
-                    }
-                }
-
-                final Bitmap thumbnail = thumb;
+                final Bitmap thumbnail = AppStorage.Thumbnail.getThumbFromDisk(context , video.id , video.data);
                 getHandler().post(new Runnable() {
                     @Override
                     public void run() {
@@ -140,7 +128,7 @@ public class VideoPlate extends Plate<VideoPlate.VH>{
         }
 
         iv.setImageBitmap(image);
-        if(animate && image != null){
+        if(animate){
             Animation anim = new AlphaAnimation(0f , 1f);
             anim.setDuration(200);
             iv.startAnimation(anim);
