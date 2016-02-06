@@ -83,7 +83,8 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="8dp"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:tint="#C8ffffff"
+            android:src="@drawable/ic_delete_24dp" />
     </FrameLayout>
 
 
