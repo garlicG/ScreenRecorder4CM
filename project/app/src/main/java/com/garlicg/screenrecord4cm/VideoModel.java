@@ -64,7 +64,7 @@ public class VideoModel {
      */
     public String getDataAddedTime(Context context){
         if(mDataAddedTimeText == null){
-            SimpleDateFormat sdf = new SimpleDateFormat("E H:MM" , Locale.ENGLISH);
+            SimpleDateFormat sdf = new SimpleDateFormat("E H:mm" , Locale.ENGLISH);
             mDataAddedTimeText = sdf.format(new Date(dataAdded * 1000));
         }
         return mDataAddedTimeText;
