@@ -58,26 +58,26 @@ public class RecordHelper {
 
 
     /**
-     * TODO Send Fabric
+     * Check if be possible to record.
      */
     public boolean checkEnableRecord(Intent data) {
         if (data == null) {
-            Cat.e("Intent is null.");
+            Cat.sendE(new IllegalArgumentException("Recording intent is null."));
             return false;
         }
 
         if(!data.hasExtra(EXTRA_MEDIA_PROJECTION_RESULT)){
-            Cat.e("MediaProjection extra is none.");
+            Cat.sendE(new IllegalArgumentException("MediaProjection extra is none."));
             return false;
         }
 
         if(!data.hasExtra(EXTRA_VIDEO_PERCENTAGE)){
-            Cat.e("VideoPercentage extra is none.");
+            Cat.sendE(new IllegalArgumentException("VideoPercentage extra is none."));
             return false;
         }
 
         if (AppStorage.Video.dir() == null) {
-            Cat.e("Can not access output directory");
+            Cat.sendE(new IllegalStateException("Can not access output directory"));
             return false;
         }
 
