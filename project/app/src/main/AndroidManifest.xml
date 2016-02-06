@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.garlicg.screenrecordct">
+    package="com.garlicg.screenrecord4cm">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -7,13 +7,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".App"
+        android:name="com.garlicg.screenrecord4cm.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
 
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.garlicg.screenrecord4cm.SettingsActivity"
             android:label="@string/app_simple_name"
             android:launchMode="singleTask"
             android:theme="@style/LightTheme">
@@ -26,13 +26,13 @@
 
         <activity-alias
             android:name=".LauncherDummy"
-            android:targetActivity=".SettingsActivity">
+            android:targetActivity="com.garlicg.screenrecord4cm.SettingsActivity">
 
         </activity-alias>
 
         <activity-alias
             android:name=".FromManager"
-            android:targetActivity=".SettingsActivity">
+            android:targetActivity="com.garlicg.screenrecord4cm.SettingsActivity">
             <intent-filter>
                 <action android:name="com.garlicg.cutin.action.PICK" />
 
@@ -43,12 +43,12 @@
 
 
         <activity
-            android:name=".VideoListActivity"
+            android:name="com.garlicg.screenrecord4cm.VideoListActivity"
             android:label="@string/video_list"
             android:theme="@style/DarkTheme"/>
 
         <service
-            android:name=".RecordService"
+            android:name="com.garlicg.screenrecord4cm.RecordService"
             android:exported="false"
             android:process=":recorder" />
 

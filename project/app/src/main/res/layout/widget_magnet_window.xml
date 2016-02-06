@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.garlicg.screenrecordct.magnet.MagnetWindow xmlns:android="http://schemas.android.com/apk/res/android"
+<com.garlicg.screenrecord4cm.magnet.MagnetWindow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -35,4 +35,4 @@
     </FrameLayout>
 
 
-</com.garlicg.screenrecordct.magnet.MagnetWindow>
+</com.garlicg.screenrecord4cm.magnet.MagnetWindow>
