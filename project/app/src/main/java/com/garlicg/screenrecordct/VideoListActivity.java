@@ -233,6 +233,8 @@ public class VideoListActivity extends AppCompatActivity{
             @Override
             public void onPostExecute(Integer integer) {
                 if(integer == 0)return;
+                AppStorage.Thumbnail.deleteThumb(VideoListActivity.this , vp.video.id);
+
                 if(isFinishing())return;
                 PlateAdapter adapter = (PlateAdapter) mRecyclerView.getAdapter();
                 adapter.removeItem(vp);
