@@ -1,8 +1,10 @@
 package com.garlicg.screenrecordct;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
@@ -146,6 +148,11 @@ public class RecordHelper {
                     @Override
                     public void onScanCompleted(String path, final Uri uri) {
                         Cat.i("path:" + path + " uri:" + uri);
+                        Bitmap thumbnail = AppStorage.Thumbnail.createVideoThumbnail(path);
+                        if(thumbnail != null){
+                            long videoId = ContentUris.parseId(uri);
+                            AppStorage.Thumbnail.saveThumb(mContext , videoId ,thumbnail);
+                        }
                         mListener.onOutputVideo();
                     }
                 });

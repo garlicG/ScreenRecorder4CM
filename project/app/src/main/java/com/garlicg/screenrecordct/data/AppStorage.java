@@ -16,14 +16,14 @@ public class AppStorage {
 
 
     public static boolean saveBitmap(File file , Bitmap bitmap){
-        return saveBitmap(file , bitmap , Bitmap.CompressFormat.PNG);
+        return saveBitmap(file , bitmap , Bitmap.CompressFormat.PNG , 90);
     }
 
 
-    public static boolean saveBitmap(File file , Bitmap bitmap , Bitmap.CompressFormat format){
+    public static boolean saveBitmap(File file , Bitmap bitmap , Bitmap.CompressFormat format , int quality){
         try {
             FileOutputStream fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG ,90 , fos);
+            bitmap.compress(format ,quality , fos);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
@@ -76,9 +76,8 @@ public class AppStorage {
                 ThumbCache.getInstance().put(videoId, bitmap);
             }
             else{
-                if(path != null){
-                    bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MINI_KIND);
-                }
+                bitmap = createVideoThumbnail(path);
+
                 // failed to create thumbnail from video
                 // 動画時間が短いときなどは作成できない
                 if(bitmap == null){
@@ -88,6 +87,12 @@ public class AppStorage {
                 ThumbCache.getInstance().put(videoId, bitmap);
             }
             return bitmap;
+        }
+
+
+        public static @Nullable Bitmap createVideoThumbnail(@Nullable String path){
+            if(path == null)return null;
+            return ThumbnailUtils.createVideoThumbnail(path , MediaStore.Video.Thumbnails.MINI_KIND);
         }
 
 
