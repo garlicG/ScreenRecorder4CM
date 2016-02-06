@@ -1,5 +1,6 @@
 package com.garlicg.screenrecordct;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.Context;
@@ -42,6 +43,7 @@ public class VideoListActivity extends AppCompatActivity{
     private RecyclerView mRecyclerView;
     private Handler mSubHandler;
 
+    @SuppressLint("PrivateResource")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,13 @@ public class VideoListActivity extends AppCompatActivity{
         // Toolbar
         Toolbar toolbar = ViewFinder.byId(this, R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back();
+            }
+        });
 
         // RecyclerView
         RecyclerView recyclerView = ViewFinder.byId(this , R.id.recyclerView);
@@ -61,7 +70,6 @@ public class VideoListActivity extends AppCompatActivity{
         recyclerView.setLayoutManager(lm);
         recyclerView.addItemDecoration(new Decoration(this));
         mRecyclerView = recyclerView;
-
 
         // 遷移元のSettingsActivityで、このActivity遷移前に権限リクエストがある
         // このActivityでストレージ権限がない場合はリクエストしない
@@ -93,6 +101,14 @@ public class VideoListActivity extends AppCompatActivity{
             outRect.bottom = mVerticalSpace;
             outRect.left = mHorizontalSpace;
         }
+    }
+
+
+    /**
+     * 戻る
+     */
+    void back(){
+        finish();
     }
 
 
