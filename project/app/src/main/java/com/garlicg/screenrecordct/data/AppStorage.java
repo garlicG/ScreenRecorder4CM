@@ -37,7 +37,7 @@ public class AppStorage {
      */
     public static class Video{
 
-        private static final String DIRECTORY_NAME = "ScreenRecorderCT";
+        private static final String DIRECTORY_NAME = "ScreenRecorder4CM";
 
         public static @Nullable File dir(){
             File parent = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);

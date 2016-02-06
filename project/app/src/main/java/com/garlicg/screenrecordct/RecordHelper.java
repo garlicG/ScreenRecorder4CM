@@ -31,7 +31,7 @@ import java.util.Locale;
 
 public class RecordHelper {
 
-    static final String DISPLAY_NAME = "ScreenRecorderCT";
+    static final String DISPLAY_NAME = "ScreenRecorder4CM";
     static final DateFormat FILE_FORMAT = new SimpleDateFormat("'Cutin'yyyyMMdd-HHmmss'.mp4'", Locale.US);
 
     static final String EXTRA_MEDIA_PROJECTION_RESULT ="MEDIA_PROJECTION_RESULT";
