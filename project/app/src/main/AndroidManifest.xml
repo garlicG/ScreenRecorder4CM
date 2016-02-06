@@ -16,17 +16,16 @@
             android:name="com.garlicg.screenrecord4cm.SettingsActivity"
             android:label="@string/app_simple_name"
             android:launchMode="singleTask"
-            android:theme="@style/LightTheme">
+            android:theme="@style/LightTheme" />
+
+        <activity-alias
+            android:name=".LauncherDummy"
+            android:enabled="false"
+            android:targetActivity="com.garlicg.screenrecord4cm.SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-
-        <activity-alias
-            android:name=".LauncherDummy"
-            android:targetActivity="com.garlicg.screenrecord4cm.SettingsActivity">
 
         </activity-alias>
 
@@ -45,7 +44,7 @@
         <activity
             android:name="com.garlicg.screenrecord4cm.VideoListActivity"
             android:label="@string/video_list"
-            android:theme="@style/DarkTheme"/>
+            android:theme="@style/DarkTheme" />
 
         <service
             android:name="com.garlicg.screenrecord4cm.RecordService"
