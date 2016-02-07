@@ -92,7 +92,7 @@ public class AppPrefs {
     private final static String INVISIBLE_RECORD = "INVISIBLE_RECORD";
 
     public boolean getInvisibleRecord() {
-        return mPrefs.getBoolean(INVISIBLE_RECORD, false);
+        return mPrefs.getBoolean(INVISIBLE_RECORD, true);
     }
 
     public void saveInvisibleRecord(boolean value) {
