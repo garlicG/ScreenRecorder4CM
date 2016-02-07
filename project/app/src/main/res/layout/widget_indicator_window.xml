@@ -15,9 +15,8 @@
         android:layout_gravity="left|center_vertical"
         android:background="@drawable/circle_button_red"
         android:scaleType="center"
-        android:src="@drawable/ic_action_close"
-        android:tint="#fff"
-        android:tintMode="multiply" />
+        android:src="@drawable/ic_close_32dp"
+        android:tint="#fff" />
 
     <ImageView
         android:id="@+id/settingsImage"
@@ -26,9 +25,8 @@
         android:layout_gravity="right|center_vertical"
         android:background="@drawable/circle_button_red"
         android:scaleType="center"
-        android:src="@drawable/ic_action_cog"
-        android:tint="#fff"
-        android:tintMode="multiply" />
+        android:src="@drawable/ic_settings_32dp"
+        android:tint="#fff" />
 
 
 </com.garlicg.screenrecord4cm.magnet.IndicatorWindow>

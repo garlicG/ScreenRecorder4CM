@@ -23,7 +23,8 @@
             android:layout_height="60dp"
             android:scaleType="center"
             android:tintMode="src_in"
-            android:src="@drawable/ic_action_record" />
+            android:tint="#fff"
+            android:src="@drawable/ic_videocam_32dp" />
 
         <TextView
             android:id="@+id/magnetText"
