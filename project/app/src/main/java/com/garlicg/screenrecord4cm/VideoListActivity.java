@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -41,14 +42,12 @@ import static com.garlicg.screenrecord4cm.plate.PlateAdapter.OnPlateClickListene
 public class VideoListActivity extends AppCompatActivity{
 
     private RecyclerView mRecyclerView;
-    private Handler mSubHandler;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @SuppressLint("PrivateResource")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mSubHandler = new Handler(getMainLooper());
 
         setContentView(R.layout.activity_videolist);
 
@@ -140,7 +139,7 @@ public class VideoListActivity extends AppCompatActivity{
             if(c != null){
                 while (c.moveToNext()){
                     VideoModel model = VideoModel.from(c);
-                    list.add(VideoPlate.newInstance(model , mSubHandler));
+                    list.add(VideoPlate.newInstance(model , mHandler));
                 }
                 c.close();
             }
