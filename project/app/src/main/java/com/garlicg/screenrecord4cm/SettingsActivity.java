@@ -133,10 +133,11 @@ public class SettingsActivity extends AppCompatActivity
 
         // from #requestCapture onClick LaunchButton
         if (requestCode == REQUEST_CAPTURE) {
-            if (resultCode != RESULT_OK || data == null) return;
-            Intent intent = RecordService.newStartIntent(this, data);
-            startService(intent);
-            finish();
+            if (resultCode == RESULT_OK && data != null) {
+                Intent intent = RecordService.newStartIntent(this, data);
+                startService(intent);
+                finish();
+            }
         }
         // from #requestCapture onBackPress
         else if (requestCode == REQUEST_STICKY_CAPTURE) {
