@@ -60,12 +60,12 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_STICKY , mSticky);
+        outState.putBoolean(KEY_STICKY, mSticky);
     }
 
 
-    void restore(Bundle savedInstanceState){
-        mSticky = savedInstanceState.getBoolean(KEY_STICKY , false);
+    void restore(Bundle savedInstanceState) {
+        mSticky = savedInstanceState.getBoolean(KEY_STICKY, false);
     }
 
 
@@ -73,9 +73,9 @@ public class SettingsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             mSticky = RecordService.requestQuit(this);
-        }else {
+        } else {
             restore(savedInstanceState);
         }
 
@@ -119,10 +119,9 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if(mSticky && isGrantedStoragePermission()){
+        if (mSticky && isGrantedStoragePermission()) {
             requestCapture(REQUEST_STICKY_CAPTURE);
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -140,8 +139,8 @@ public class SettingsActivity extends AppCompatActivity
             finish();
         }
         // from #requestCapture onBackPress
-        else if(requestCode == REQUEST_STICKY_CAPTURE){
-            if(resultCode == RESULT_OK && data != null){
+        else if (requestCode == REQUEST_STICKY_CAPTURE) {
+            if (resultCode == RESULT_OK && data != null) {
                 Intent intent = RecordService.newStartIntent(this, data);
                 startService(intent);
             }
@@ -204,7 +203,7 @@ public class SettingsActivity extends AppCompatActivity
     /**
      * Create auto stop setting view
      */
-    private void createFireCutin(Bundle savedInstanceState){
+    private void createFireCutin(Bundle savedInstanceState) {
 
         // init value setup
         final TextView valueView = ViewFinder.byId(this, R.id.fireCutinValue);
@@ -219,6 +218,7 @@ public class SettingsActivity extends AppCompatActivity
                 //noinspection PointlessArithmeticExpression
                 return msec >= 0 && msec <= 1 * 1000 * 1000 - 1; // 999秒
             }
+
             @Override
             public void onOk(int value) {
                 int msec = value * 100;
@@ -242,7 +242,7 @@ public class SettingsActivity extends AppCompatActivity
     /**
      * Create auto stop setting view
      */
-    private void createAutoStop(Bundle savedInstanceState){
+    private void createAutoStop(Bundle savedInstanceState) {
 
         // init value setup
         final TextView valueView = ViewFinder.byId(this, R.id.autoStopValue);
@@ -260,12 +260,13 @@ public class SettingsActivity extends AppCompatActivity
                 //noinspection PointlessArithmeticExpression
                 return msec >= 0 && msec <= 1 * 1000 * 1000 - 1; // 999秒
             }
+
             @Override
             public void onOk(int value) {
                 int msec = value * 100;
                 valueView.setText(msec == 0
-                        ? getString(R.string.no_seconds_only_manual_stop)
-                        : getString(R.string.plus_x_ms_later, msec)
+                                ? getString(R.string.no_seconds_only_manual_stop)
+                                : getString(R.string.plus_x_ms_later, msec)
                 );
 
                 mPrefs.saveAutoStopMilliSec(msec);
@@ -298,6 +299,7 @@ public class SettingsActivity extends AppCompatActivity
             public boolean onValidate(CharSequence value) {
                 return !TextUtils.isEmpty(value);
             }
+
             @Override
             public void onOk(CharSequence value) {
                 valueView.setText(value);
@@ -331,6 +333,7 @@ public class SettingsActivity extends AppCompatActivity
             public boolean onValidate(CharSequence value) {
                 return !TextUtils.isEmpty(value);
             }
+
             @Override
             public void onOk(CharSequence value) {
                 valueView.setText(value);
@@ -391,13 +394,13 @@ public class SettingsActivity extends AppCompatActivity
     /**
      * 動画数表示を更新する
      */
-    private void invalidateVideoCount(){
-        final TextView titleView = ViewFinder.byId(this , R.id.videoListTitle);
+    private void invalidateVideoCount() {
+        final TextView titleView = ViewFinder.byId(this, R.id.videoListTitle);
         titleView.setText(getString(R.string.video_list));
 
         // アクセスできる場合のみカウントを取得
         File videoDir = AppStorage.Video.dir();
-        if(videoDir != null && isGrantedStoragePermission()){
+        if (videoDir != null && isGrantedStoragePermission()) {
 
             ContentAccessor ca = new ContentAccessor(this);
             ca.setQuery(new String[]{MediaStore.Video.VideoColumns._ID}
@@ -409,11 +412,11 @@ public class SettingsActivity extends AppCompatActivity
                 @Override
                 public void onPostExecute(final Cursor c) {
                     int videoNum = 0;
-                    if(c != null){
+                    if (c != null) {
                         videoNum = c.getCount();
                         c.close();
                     }
-                    if(isFinishing())return;
+                    if (isFinishing()) return;
                     titleView.setText(getString(R.string.video_list_x, videoNum));
                 }
             });
@@ -449,7 +452,7 @@ public class SettingsActivity extends AppCompatActivity
     /**
      * 動画一覧Activityを表示する
      */
-    void startVideoListActivity(){
+    void startVideoListActivity() {
         Intent intent = new Intent(SettingsActivity.this, VideoListActivity.class);
         startActivity(intent);
     }
@@ -458,7 +461,7 @@ public class SettingsActivity extends AppCompatActivity
     /**
      * ストレージ権限をリクエストする
      */
-    void requestStoragePermission(int requestCode){
+    void requestStoragePermission(int requestCode) {
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, requestCode);
     }
 
@@ -466,7 +469,7 @@ public class SettingsActivity extends AppCompatActivity
     /**
      * ストレージ権限があるか
      */
-    boolean isGrantedStoragePermission(){
+    boolean isGrantedStoragePermission() {
         return ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED;
     }
@@ -490,10 +493,9 @@ public class SettingsActivity extends AppCompatActivity
         }
 
         // next step
-        if(requestCode == REQUEST_STORAGE_PERMISSION_FOR_RECORD){
+        if (requestCode == REQUEST_STORAGE_PERMISSION_FOR_RECORD) {
             requestCapture(REQUEST_CAPTURE);
-        }
-        else if(requestCode == REQUEST_STORAGE_PERMISSION_FOR_VIDEO_LIST){
+        } else if (requestCode == REQUEST_STORAGE_PERMISSION_FOR_VIDEO_LIST) {
             startVideoListActivity();
         }
 
@@ -503,7 +505,7 @@ public class SettingsActivity extends AppCompatActivity
     /**
      * 権限理由を説明して設定に飛ばすダイアログを表示する
      */
-    private void showPermissionRationale(String reason){
+    private void showPermissionRationale(String reason) {
         AlertDialog.Builder ab = new AlertDialog.Builder(this);
         ab.setMessage(reason);
         ab.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
@@ -523,16 +525,21 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings , menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_open_source_license){
+        if (item.getItemId() == R.id.menu_open_source_license) {
             Intent intent = SimpleWebViewActivity.newIntent(this, getString(R.string.open_source_license),
                     "file:///android_asset/open_source_license.html");
+            startActivity(intent);
+            return true;
+        } else if (item.getItemId() == R.id.menu_about_app) {
+            Intent intent = SimpleWebViewActivity.newIntent(this, getString(R.string.about_app),
+                    "file:///android_asset/about_app.html");
             startActivity(intent);
             return true;
         }
