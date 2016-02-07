@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.garlicg.screenrecord4cm.magnet.MagnetWindow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/viewRoot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle_button_red"
+        android:padding="3dp">
+
+        <ImageView
+            android:id="@+id/innerFrame"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/record_button_inner_frame"
+            android:src="@drawable/record_button_inner_cover" />
+
+        <ImageView
+            android:id="@+id/magnetIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="center"
+            android:tintMode="src_in"
+            android:tint="#fff"
+            android:src="@drawable/ic_videocam_32dp" />
+
+        <TextView
+            android:id="@+id/magnetText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="#fff"
+            android:textSize="16dp" />
+    </FrameLayout>
+
+
+</com.garlicg.screenrecord4cm.magnet.MagnetWindow>

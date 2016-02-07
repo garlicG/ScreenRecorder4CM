@@ -1,0 +1,37 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+    </style>
+
+    <style name="LightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorAccent">@color/appRed</item>
+        <item name="colorPrimary">@color/appRed</item>
+        <item name="alertDialogTheme">@style/LightAlertDialogStyle</item>
+    </style>
+
+    <style name="LightAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/appRed</item>
+    </style>
+
+    <style name="DarkTheme" parent="Theme.AppCompat">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorAccent">@color/appYellow</item>
+        <item name="colorPrimary">@color/appRed</item>
+    </style>
+
+    <style name="DarkAlertDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/appYellow</item>
+    </style>
+
+    <style name="WebViewTheme" parent="Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorAccent">#f0f0f0</item>
+        <item name="alertDialogTheme">@style/LightAlertDialogStyle</item>
+    </style>
+
+
+</resources>

@@ -1,3 +1,3 @@
-# tiii
+# ScreenRecorder4CM
 
-Simple capture screen video app.
+Cut-in Manager plug-in for screen record. 
