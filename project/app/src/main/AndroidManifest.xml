@@ -46,6 +46,11 @@
             android:label="@string/video_list"
             android:theme="@style/DarkTheme" />
 
+        <activity
+            android:name=".SimpleWebViewActivity"
+            android:label="@string/app_simple_name"
+            android:theme="@style/WebViewTheme" />
+
         <service
             android:name="com.garlicg.screenrecord4cm.RecordService"
             android:exported="false"

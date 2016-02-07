@@ -26,5 +26,12 @@
         <item name="colorAccent">@color/appYellow</item>
     </style>
 
+    <style name="WebViewTheme" parent="Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorAccent">#f0f0f0</item>
+        <item name="alertDialogTheme">@style/LightAlertDialogStyle</item>
+    </style>
+
 
 </resources>
